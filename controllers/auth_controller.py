@@ -1,18 +1,9 @@
 from flask import request, jsonify
-from firebase_admin import auth
 from google.cloud import firestore
 from models.user_model import User
-import uuid
-import random
+from db import get_collection_reference, get_document_reference
 from datetime import datetime, timedelta, timezone
-
-def format_phone_number(phone):
-    phone = ''.join(filter(str.isdigit, phone))
-    if not phone.startswith('91'):
-        phone = '91' + phone
-    if not phone.startswith('+'):
-        phone = '+' + phone
-    return phone
+from utils import send_otp, verify_otp
 
 def check_phone_exists(phone_number):
     db = firestore.Client()
@@ -21,24 +12,22 @@ def check_phone_exists(phone_number):
 
 def send_verification_code():
     try:
+        # Phone number should be 10 digits, no country code required
         phone_number = request.json.get('phone_number')
         if not phone_number:
             return jsonify({"error": "Phone number is required"}), 400
 
-        phone_number = format_phone_number(phone_number)
         # Check if phone number already exists in db
         if check_phone_exists(phone_number):
             return jsonify({"error": "Phone number already registered"}), 400
 
-        verification_id = str(uuid.uuid4())
-        otp = str(random.randint(100000, 999999))
+        verification_id = send_otp(phone_number)
         
-        db = firestore.Client()
-        doc_ref = db.collection('phone_auth').document(verification_id)
+        db = get_collection_reference('phone_auth')
+        doc_ref = db.document(verification_id)
         doc_ref.set({
             'phone_number': phone_number,
             'verification_id': verification_id,
-            'otp': otp,
             'verified': False,
             'attempts': 0,
             'created_at': firestore.SERVER_TIMESTAMP,
@@ -46,9 +35,8 @@ def send_verification_code():
         })
 
         return jsonify({
-            "message": "Verification code sent",
-            "verification_id": verification_id,
-            "otp_code": otp
+            "message": f"Verification code sent to {phone_number}",
+            "verification_id": verification_id
         }), 200
 
     except Exception as e:
@@ -64,11 +52,9 @@ def verify_code():
 
         if not all([verification_id, verification_code, phone_number]):
             return jsonify({"error": "Missing required fields"}), 400
-
-        phone_number = format_phone_number(phone_number)
         
-        db = firestore.Client()
-        doc_ref = db.collection('phone_auth').document(verification_id)
+        db = get_collection_reference('phone_auth')
+        doc_ref = db.document(verification_id)
         doc = doc_ref.get()
 
         if not doc.exists:
@@ -79,43 +65,15 @@ def verify_code():
         if datetime.now(timezone.utc) > doc_data['expires_at']:
             return jsonify({"error": "Verification code expired"}), 400
 
-        if doc_data['attempts'] >= 3:
+        if doc_data['attempts'] >= 5:
             return jsonify({"error": "Too many attempts"}), 400
 
         doc_ref.update({'attempts': doc_data['attempts'] + 1})
 
-        if verification_code != doc_data['otp']:
-            return jsonify({"error": "Invalid verification code"}), 400
+        if verify_otp(phone_number, verification_id, verification_code):
+            return jsonify({"message": "OTP verified"}), 200
 
-        # Create new user if verification successful
-        user = User(
-            unique_id=None,
-            first_name=first_name,
-            last_name=last_name,
-            phone_number=phone_number,
-            is_user=True,
-            credits=0
-        )
-        user.save()
+        return jsonify({"error": "Invalid verification code"}), 400
 
-        custom_token = auth.create_custom_token(phone_number)
-
-        return jsonify({
-            "message": "Phone number verified",
-            "token": custom_token.decode('utf-8'),
-            "user": user.to_dict()
-        }), 200
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-def google_sign_in():
-    try:
-        id_token = request.json.get('id_token')
-        if not id_token:
-            return jsonify({"error": "ID token is required"}), 400
-            
-        decoded_token = auth.verify_id_token(id_token)
-        return jsonify({"decoded_token": decoded_token}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
