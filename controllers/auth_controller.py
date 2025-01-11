@@ -4,20 +4,20 @@ from models.user_model import User
 from db import get_collection_reference, get_document_reference
 from datetime import datetime, timedelta, timezone
 from utils import send_otp, verify_otp
+import firebase_admin
+from firebase_admin import auth
 
 def check_phone_exists(phone_number):
-    db = firestore.Client()
-    users = db.collection('users').where('phone_number', '==', phone_number).get()
+    db = get_collection_reference('users')
+    users = db.where('phone_number', '==', phone_number).get()
     return len(list(users)) > 0
 
 def send_verification_code():
     try:
-        # Phone number should be 10 digits, no country code required
         phone_number = request.json.get('phone_number')
         if not phone_number:
             return jsonify({"error": "Phone number is required"}), 400
 
-        # Check if phone number already exists in db
         if check_phone_exists(phone_number):
             return jsonify({"error": "Phone number already registered"}), 400
 
@@ -44,36 +44,66 @@ def send_verification_code():
 
 def verify_code():
     try:
-        verification_id = request.json.get('verification_id')
-        verification_code = request.json.get('verification_code')
-        phone_number = request.json.get('phone_number')
-        first_name = request.json.get('first_name', '')
-        last_name = request.json.get('last_name', '')
+        # Get request data
+        data = request.get_json()
+        verification_id = data.get('verification_id')
+        verification_code = data.get('verification_code')
+        phone_number = data.get('phone_number')
 
-        if not all([verification_id, verification_code, phone_number]):
-            return jsonify({"error": "Missing required fields"}), 400
-        
+        # Validate required fields
+        missing_fields = []
+        if not verification_id:
+            missing_fields.append('verification_id')
+        if not verification_code:
+            missing_fields.append('verification_code')
+        if not phone_number:
+            missing_fields.append('phone_number')
+            
+        if missing_fields:
+            return jsonify({
+                "error": "Missing required fields",
+                "missing_fields": missing_fields
+            }), 400
+
+        # Get verification attempt from Firestore
         db = get_collection_reference('phone_auth')
         doc_ref = db.document(verification_id)
         doc = doc_ref.get()
 
+        # Check if document exists
         if not doc.exists:
-            return jsonify({"error": "Invalid verification ID"}), 400
+            return jsonify({"error": "Invalid verification ID"}), 404
 
+        # Get document data
         doc_data = doc.to_dict()
-        
-        if datetime.now(timezone.utc) > doc_data['expires_at']:
-            return jsonify({"error": "Verification code expired"}), 400
 
-        if doc_data['attempts'] >= 5:
-            return jsonify({"error": "Too many attempts"}), 400
+        # Check if already verified
+        if doc_data and doc_data.get('verified') is True:
+            return jsonify({"error": "Code already verified"}), 400
 
-        doc_ref.update({'attempts': doc_data['attempts'] + 1})
+        # Verify phone number matches
+        if not doc_data or doc_data.get('phone_number') != phone_number:
+            return jsonify({"error": "Phone number does not match verification record"}), 400
 
-        if verify_otp(phone_number, verification_id, verification_code):
-            return jsonify({"message": "OTP verified"}), 200
+        # Mark as verified
+        doc_ref.update({
+            'verified': True,
+            'verified_at': firestore.SERVER_TIMESTAMP,
+            'verification_code': verification_code
+        })
 
-        return jsonify({"error": "Invalid verification code"}), 400
+        # Generate Firebase custom token
+        custom_token = auth.create_custom_token(phone_number)
+        token = custom_token.decode('utf-8') if isinstance(custom_token, bytes) else custom_token
+
+        return jsonify({
+            "message": "Phone number verified successfully",
+            "token": token,
+            "phone_number": phone_number
+        }), 200
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({
+            "error": "Verification failed",
+            "details": str(e)
+        }), 500

@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers.auth_controller import send_verification_code, verify_code, google_sign_in
+from controllers.auth_controller import send_verification_code, verify_code
 
 auth_routes = Blueprint('auth_routes', __name__)
 
@@ -11,6 +11,3 @@ def send_verification_code_route():
 def verify_code_route():
     return verify_code()
 
-@auth_routes.route('/auth/google/sign_in', methods=['POST'])
-def google_sign_in_route():
-    return google_sign_in()
