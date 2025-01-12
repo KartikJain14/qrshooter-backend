@@ -4,7 +4,6 @@ from models.user_model import User
 from db import get_collection_reference, get_document_reference
 from datetime import datetime, timedelta, timezone
 from utils import send_otp, verify_otp
-import firebase_admin
 from firebase_admin import auth
 
 def check_phone_exists(phone_number):
@@ -51,18 +50,10 @@ def verify_code():
         phone_number = data.get('phone_number')
 
         # Validate required fields
-        missing_fields = []
-        if not verification_id:
-            missing_fields.append('verification_id')
-        if not verification_code:
-            missing_fields.append('verification_code')
-        if not phone_number:
-            missing_fields.append('phone_number')
-            
-        if missing_fields:
+        if not all([verification_id, verification_code, phone_number]):
             return jsonify({
                 "error": "Missing required fields",
-                "missing_fields": missing_fields
+                "required": ["verification_id", "verification_code", "phone_number"]
             }), 400
 
         # Get verification attempt from Firestore
@@ -71,30 +62,37 @@ def verify_code():
         doc = doc_ref.get()
 
         # Check if document exists
-        if not doc.exists:
+        if not doc.exists():
             return jsonify({"error": "Invalid verification ID"}), 404
 
         # Get document data
         doc_data = doc.to_dict()
 
         # Check if already verified
-        if doc_data and doc_data.get('verified') is True:
+        if doc_data.get('verified'):
             return jsonify({"error": "Code already verified"}), 400
 
         # Verify phone number matches
-        if not doc_data or doc_data.get('phone_number') != phone_number:
+        if doc_data['phone_number'] != phone_number:
             return jsonify({"error": "Phone number does not match verification record"}), 400
+
+        # Verify code using the verify_otp function
+        if not verify_otp(phone_number, verification_id, verification_code):
+            return jsonify({"error": "Invalid verification code"}), 400
 
         # Mark as verified
         doc_ref.update({
             'verified': True,
             'verified_at': firestore.SERVER_TIMESTAMP,
-            'verification_code': verification_code
+            'verification_code': verification_code  # Store for audit
         })
 
         # Generate Firebase custom token
-        custom_token = auth.create_custom_token(phone_number)
-        token = custom_token.decode('utf-8') if isinstance(custom_token, bytes) else custom_token
+        try:
+            custom_token = auth.create_custom_token(phone_number)
+            token = custom_token.decode('utf-8') if isinstance(custom_token, bytes) else custom_token
+        except Exception as e:
+            return jsonify({"error": f"Error generating auth token: {str(e)}"}), 500
 
         return jsonify({
             "message": "Phone number verified successfully",
