@@ -1,10 +1,12 @@
 from flask import request, jsonify
 from google.cloud import firestore
+from controllers.user_controller import add_user
 from models.user_model import User
 from db import get_collection_reference, get_document_reference
 from datetime import datetime, timedelta, timezone
-from utils import send_otp, verify_otp
+from utils import send_otp
 from firebase_admin import auth
+import base64
 
 def check_phone_exists(phone_number):
     db = get_collection_reference('users')
@@ -20,7 +22,7 @@ def send_verification_code():
         if check_phone_exists(phone_number):
             return jsonify({"error": "Phone number already registered"}), 400
 
-        verification_id = send_otp(phone_number)
+        verification_id, otp = send_otp(phone_number)
         
         db = get_collection_reference('phone_auth')
         doc_ref = db.document(verification_id)
@@ -30,7 +32,8 @@ def send_verification_code():
             'verified': False,
             'attempts': 0,
             'created_at': firestore.SERVER_TIMESTAMP,
-            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=5)
+            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=5),
+            'otp': otp
         })
 
         return jsonify({
@@ -68,36 +71,35 @@ def verify_code():
         # Get document data
         doc_data = doc.to_dict()
 
+
         # Check if already verified
         if doc_data.get('verified'):
             return jsonify({"error": "Code already verified"}), 400
 
+        # Check if the code has expired 
+        if doc_data.get('expires_at') < datetime.now(timezone.utc):
+            return jsonify({"error": "Verification code has expired"}), 400
+        
         # Verify phone number matches
         if doc_data['phone_number'] != phone_number:
             return jsonify({"error": "Phone number does not match verification record"}), 400
 
         # Verify code using the verify_otp function
-        if not verify_otp(phone_number, verification_id, verification_code):
+        if doc_data['otp'] != verification_code:
             return jsonify({"error": "Invalid verification code"}), 400
+
+        token = base64.b64encode(verification_code)
 
         # Mark as verified
         doc_ref.update({
             'verified': True,
             'verified_at': firestore.SERVER_TIMESTAMP,
-            'verification_code': verification_code  # Store for audit
+            token: token
         })
 
-        # Generate Firebase custom token
-        try:
-            custom_token = auth.create_custom_token(phone_number)
-            token = custom_token.decode('utf-8') if isinstance(custom_token, bytes) else custom_token
-        except Exception as e:
-            return jsonify({"error": f"Error generating auth token: {str(e)}"}), 500
-
         return jsonify({
-            "message": "Phone number verified successfully",
-            "token": token,
-            "phone_number": phone_number
+            "message": "Verification successful",
+            "token": token
         }), 200
 
     except Exception as e:
@@ -105,3 +107,18 @@ def verify_code():
             "error": "Verification failed",
             "details": str(e)
         }), 500
+    
+def create_user_by_token():
+    try:
+        data = request.json
+        token = data.get('token')
+        db = get_collection_reference('phone_auth')
+        doc_ref = db.document(base64.b64decode(token))
+        user = doc_ref.get()
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        else:
+            return add_user(request)
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400

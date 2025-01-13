@@ -8,7 +8,8 @@ def validate_contact_info(email, phone_number):
         return False, "At least one of email or phone_number is required."
     return True, ""
 
-def add_user():
+#Experimental 99% wont work but idk
+def add_user(request=None):
     try:
         data = request.json
         first_name = data.get('first_name')
