@@ -31,8 +31,13 @@ def send_verification_code():
             'verified': False,
             'attempts': 0,
             'created_at': firestore.SERVER_TIMESTAMP,
-            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=5),
-            'otp': otp
+
+            ############################################
+            # Set expiry to 30 minutes for development #
+            ############################################
+
+            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=30),
+            'otp': f'{otp}'
         })
 
         return jsonify({
@@ -64,7 +69,7 @@ def verify_code():
         doc = doc_ref.get()
 
         # Check if document exists
-        if not doc.exists():
+        if doc.exists == False:
             return jsonify({"error": "Invalid verification ID"}), 404
 
         # Get document data
@@ -84,10 +89,12 @@ def verify_code():
             return jsonify({"error": "Phone number does not match verification record"}), 400
 
         # Verify code using the verify_otp function
+        print(type(doc_data['otp']), type((verification_code)))
+        print(doc_data['otp'], (verification_code))
         if doc_data['otp'] != verification_code:
             return jsonify({"error": "Invalid verification code"}), 400
 
-        token = base64.b64encode(phone_number+"::"+verification_id)
+        token = base64.b64encode((phone_number+"::"+verification_id).encode('utf-8')).decode('utf-8')
 
         # Mark as verified
         doc_ref.update({
@@ -112,13 +119,13 @@ def create_user_by_token():
         data = request.json
         token = data.get('token')
         db = get_collection_reference('phone_auth')
-        token = db.document(base64.b64decode(token))
+        token = base64.b64decode(token).decode('utf-8')
         phone_number, verification_id = token.split("::")
         doc_ref = db.document(verification_id)
         user = doc_ref.get()
 
         if not user:
-            return jsonify({"error": "User not found"}), 404
+            return jsonify({"error": "Token invalid"}), 404
         
         first_name = data.get('first_name')
         last_name = data.get('last_name')
