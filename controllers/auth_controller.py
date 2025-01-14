@@ -1,6 +1,5 @@
 from flask import request, jsonify
 from google.cloud import firestore
-from controllers.user_controller import add_user
 from models.user_model import User
 from db import get_collection_reference, get_document_reference
 from datetime import datetime, timedelta, timezone
@@ -88,7 +87,7 @@ def verify_code():
         if doc_data['otp'] != verification_code:
             return jsonify({"error": "Invalid verification code"}), 400
 
-        token = base64.b64encode(verification_code)
+        token = base64.b64encode(phone_number+"::"+verification_id)
 
         # Mark as verified
         doc_ref.update({
@@ -113,12 +112,32 @@ def create_user_by_token():
         data = request.json
         token = data.get('token')
         db = get_collection_reference('phone_auth')
-        doc_ref = db.document(base64.b64decode(token))
+        token = db.document(base64.b64decode(token))
+        phone_number, verification_id = token.split("::")
+        doc_ref = db.document(verification_id)
         user = doc_ref.get()
+
         if not user:
             return jsonify({"error": "User not found"}), 404
-        else:
-            return add_user(request)
+        
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
+        user_points = int(data.get('user_points', 0)) 
+
+        user = User(
+            unique_id=None,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone_number=phone_number,
+            credits=user_points  # Pass points directly as integer
+        )
+
+        user.save()
+
+        return {"message": "User added successfully", "user": user.to_dict()}, 201
+
         
     except Exception as e:
         return jsonify({"error": str(e)}), 400
