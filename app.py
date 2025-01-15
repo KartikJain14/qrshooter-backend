@@ -5,12 +5,11 @@ from routes.credit_routes import credit_routes
 from routes.user_routes import user_routes
 from routes.auth_routes import auth_routes
 from routes.website_routes import website_routes
-from dotenv import load_dotenv
+
 import os
 
 ADMIN_PATH=os.getenv("ADMIN_PORTAL") or "/admin"
 
-load_dotenv()
 # Initialize Flask app
 app = Flask(__name__)
 app.config.from_object(Config)

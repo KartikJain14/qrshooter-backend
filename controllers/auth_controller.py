@@ -31,12 +31,7 @@ def send_verification_code():
             'verified': False,
             'attempts': 0,
             'created_at': firestore.SERVER_TIMESTAMP,
-
-            ############################################
-            # Set expiry to 30 minutes for development #
-            ############################################
-
-            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=30),
+            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=10),
             'otp': f'{otp}'
         })
 
