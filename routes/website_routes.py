@@ -1,6 +1,6 @@
 from flask import Blueprint, request, render_template, jsonify
 from controllers.website_controller import (
-    index, admin_login, home, add_user_logic, user_details,
+    home, add_user_logic, user_details,
     update_user_points_logic, update_user_role_logic, delete_user_logic, get_user_transactions_logic
 )
 import os
