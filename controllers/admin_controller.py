@@ -2,6 +2,17 @@ from firebase_admin import auth, firestore
 from models.role_model import Role
 from models.user_model import User
 from db import get_document_reference
+import base64
+import os
+
+def auth_middleware(token):
+    if not token:
+        return jsonify({"error": "Unauthorized: Token key not provided"}), 401
+
+    token = base64.b64decode(token).decode('utf-8')
+    
+    if token != os.getenv('ADMIN_PASSWORD'):
+        return jsonify({"error": "Unauthorized: Invalid Credentials"}), 401
 
 def get_all_users():
     try:
