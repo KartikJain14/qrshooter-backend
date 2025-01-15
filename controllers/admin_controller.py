@@ -4,7 +4,7 @@ from models.user_model import User
 from db import get_document_reference
 import base64
 import os
-
+from flask import jsonify
 def auth_middleware(token):
     if not token:
         return jsonify({"error": "Unauthorized: Token key not provided"}), 401
