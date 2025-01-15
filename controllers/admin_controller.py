@@ -5,6 +5,7 @@ from db import get_document_reference
 import base64
 import os
 from flask import jsonify
+
 def auth_middleware(token):
     if not token:
         return jsonify({"error": "Unauthorized: Token key not provided"}), 401
@@ -41,7 +42,7 @@ def update_user_points(user_id, points):
     except Exception as e:
         return {"error": str(e)}, 400
 
-def add_user(user_id, user_name, user_points):
+def add_user(user_id, user_name, user_points=0):
     try:
         user_ref = get_document_reference('users', user_id)
         user_ref.set({

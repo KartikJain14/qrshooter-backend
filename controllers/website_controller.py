@@ -2,7 +2,7 @@ from flask import jsonify, render_template, redirect, request
 from dotenv import load_dotenv
 from db import get_collection_reference
 from controllers.admin_controller import add_user
-import os
+from models.user_model import User
 
 load_dotenv()
 
@@ -22,15 +22,25 @@ def home():
 
 def add_user_logic(data):
     try:
-        user_data = {
-            "first_name": data.get('first_name'),
-            "last_name": data.get('last_name'),
-            "email": data.get('email'),
-            "phone_number": data.get('phone_number'),
-            "credits": int(data.get('user_points', 0))
-        }
-        response = add_user(user_data)
-        return jsonify(response), 200
+        first_name= data.get('first_name')
+        last_name= data.get('last_name')
+        email= data.get('email')
+        phone_number= data.get('phone_number')
+        user_points= int(data.get('user_points', 0))
+        if not email and not phone_number:
+            return jsonify({"error": "At least one of email or phone_number is required"}), 400
+        
+        user = User(
+            unique_id=None,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone_number=phone_number,
+            credits=user_points
+        )
+
+        user.save()
+        return {"message": "User added successfully", "user": user.to_dict()}, 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -64,7 +74,7 @@ def update_user_role_logic(user_id, new_role):
 def delete_user_logic(user_id):
     try:
         db.document(user_id).delete()
-        return redirect("/home")
+        return jsonify({"message": "User deleted successfully"}), 200
     except Exception as e:
         return str(e), 500
 

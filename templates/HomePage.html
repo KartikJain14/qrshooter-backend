@@ -84,7 +84,7 @@
             </tr>
             {% for user in users %}
             <tr>
-                <td><a href="/user/{{ user.id }}">{{ user.id }}</a></td>
+                <td><a href="./user/{{ user.id }}">{{ user.id }}</a></td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.credits }}</td>
                 <td>{{ user.role }}</td>
@@ -92,7 +92,7 @@
             {% endfor %}
         </table>
         <div class="actions">
-            <a href="/admin/users/add" class="btn">Add User</a>
+            <a href="./user/add" class="btn">Add User</a>
         </div>
     </div>
 </body>

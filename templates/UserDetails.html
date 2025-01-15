@@ -105,7 +105,7 @@
 
         <div class="card">
             <h3>Modify Points</h3>
-            <form action="/user/points/update" method="POST">
+            <form action="../user/points/update" method="POST">
                 <input type="hidden" name="user_id" value="{{ user.unique_id }}">
                 <div class="form-group">
                     <input type="number" name="points" placeholder="Enter points">
@@ -116,7 +116,7 @@
 
         <div class="card">
             <h3>Change Role</h3>
-            <form action="/user/role/update" method="POST">
+            <form action="../user/role/update" method="POST">
                 <input type="hidden" name="user_id" value="{{ user.unique_id }}">
                 <div class="form-group">
                     <select name="role">
@@ -147,12 +147,40 @@
         </div>
 
         <div class="card">
-            <form action="/user/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?');">
+            <!-- Add the correct id for the form here -->
+            <form id="deleteUserForm">
                 <input type="hidden" name="user_id" value="{{ user.unique_id }}">
                 <button type="submit" class="btn btn-danger">Delete User</button>
-                <a href="/home" class="btn" style="background: #6c757d;">Back to Home</a>
+                <a href="../" class="btn" style="background: #6c757d;">Back to Home</a>
             </form>
         </div>
     </div>
 
     <script>
+        document.getElementById('deleteUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent default form submission
+
+            if (confirm('Are you sure you want to delete this user?')) {
+                var formData = new FormData(this);
+
+                fetch('../user/delete', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'User deleted successfully') {
+                        window.location.href = '../';  // Redirect after deletion
+                    } else {
+                        alert('Failed to delete user: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the user.');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

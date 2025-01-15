@@ -6,12 +6,13 @@ from controllers.website_controller import (
 
 website_routes = Blueprint('website_routes', __name__)
 
+# do NOT change the routes without manually changing stuff in templates
+
 @website_routes.route("/", methods=["GET"])
-@website_routes.route("/home", methods=["GET"])
 def route_home():
     return home()
 
-@website_routes.route("/admin/users/add", methods=["GET", "POST"])
+@website_routes.route("/user/add", methods=["GET", "POST"])
 def route_add_user():
     if request.method == "POST":
         return add_user_logic(request.json)
