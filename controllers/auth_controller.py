@@ -31,7 +31,12 @@ def send_verification_code():
             'verified': False,
             'attempts': 0,
             'created_at': firestore.SERVER_TIMESTAMP,
-            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=10),
+
+            ############################################
+            # Set expiry to 30 minutes for development #
+            ############################################
+
+            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=30),
             'otp': f'{otp}'
         })
 
@@ -143,3 +148,38 @@ def create_user_by_token():
         
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    
+    
+
+
+
+def search_user_by_email():
+    try:
+        # Get the email from the POST request
+        data = request.get_json()
+        email = data.get('email')
+
+        if not email:
+            return jsonify({"error": "Email is required"}), 400
+
+        # Query Firestore to check if the email exists
+        db = get_collection_reference('users')  # 'users' is the Firestore collection name
+        users = db.where('email', '==', email).get()
+
+        # Check if a user with this email exists
+        if len(users) > 0:
+            # Extract user details
+            user_data = users[0].to_dict()  # Get the first matching document's data
+            user_data['id'] = users[0].id  # Add the Firestore document ID if needed
+            return jsonify({
+                "message": "Email already in use",
+                "user_exists": True,
+                "user": user_data
+            }), 200
+
+        # If no user is found
+        return jsonify({"message": "Email is available", "user_exists": False}), 200
+
+    except Exception as e:
+        return jsonify({"error": "Error searching email", "details": str(e)}), 500
+
