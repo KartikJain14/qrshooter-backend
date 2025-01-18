@@ -3,7 +3,7 @@ name: Sync with Production Repo
 on:
   push:
     branches:
-      - main  # Replace with the branch you want to sync from
+      - master  # Replace with the branch you want to sync from
 
 jobs:
   sync:
