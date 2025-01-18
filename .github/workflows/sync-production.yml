@@ -20,7 +20,7 @@ jobs:
 
     - name: Add production repo as remote
       run: |
-        git remote add production https://github.com/KartikJain14/qrshooter-backend.git
+        git remote add production https://${{ secrets.PRODUCTION_PAT }}@github.com/KartikJain14/qrshooter-backend.git
         git fetch production
       env:
         TOKEN: ${{ secrets.PRODUCTION_PAT }}
