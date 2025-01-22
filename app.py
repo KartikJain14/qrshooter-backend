@@ -11,6 +11,8 @@ import os
 ADMIN_PATH=os.getenv("ADMIN_PORTAL") or "/admin"
 
 # Initialize Flask app
+
+
 app = Flask(__name__)
 app.config.from_object(Config)
 
