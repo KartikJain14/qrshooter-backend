@@ -15,6 +15,6 @@ def update_profile_route():
 def delete_profile_route():
     return delete_profile()
 
-@user_routes.route('/profile', methods=['GET'])
-def get_profile_route():
-    return get_profile()
+@user_routes.route('/profile/<string: unique_id>', methods=['GET'])
+def get_profile_route(unique_id):
+    return get_profile(unique_id)

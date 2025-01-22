@@ -85,10 +85,8 @@ def delete_profile():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
-def get_profile():
+def get_profile(unique_id):
     try:
-        data = request.json
-        unique_id = data.get('unique_id')
         user = User.get_by_id(unique_id)
         if user:
             return jsonify({"user": user.to_dict()}), 200
