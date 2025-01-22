@@ -19,5 +19,5 @@ def transaction_history_route():
     return transaction_history()
 
 @credit_routes.route('/leaderboard', methods=['GET'])
-def leaderboard():
+def get_leaderboard():
     return leaderboard()
