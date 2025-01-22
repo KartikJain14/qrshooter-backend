@@ -1,7 +1,6 @@
 from flask import request, jsonify
 from models.role_model import Role
 from models.user_model import User
-import datetime
 
 def allocate_points():
     try:
@@ -82,6 +81,20 @@ def transaction_history():
 
         # Return the transaction history
         return jsonify({"transaction_history": user.transaction_history}), 200
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+def leaderboard():
+    try:
+        # Fetch all users from the database
+        users = User.get_all_users()
+
+        # Sort users by credits in descending order
+        sorted_users = sorted(users, key=lambda x: x.credits, reverse=True)
+
+        # Return the leaderboard data
+        return jsonify({"leaderboard": [user.to_dict() for user in sorted_users]}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
