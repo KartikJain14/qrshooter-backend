@@ -1,7 +1,6 @@
 from flask import request, jsonify
 from db import get_document_reference
 from models.user_model import User
-from models.credit_model import Credits
 
 def validate_contact_info(email, phone_number):
     if not email and not phone_number:

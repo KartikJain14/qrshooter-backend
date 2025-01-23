@@ -30,9 +30,15 @@ def allocate_points():
 
         if not target_user:
             return jsonify({"error": "Target user not found"}), 404
+        
+        if current_user.role == Role.SALES:
+            if current_user.balance < points:
+                return jsonify({"error": "Insufficient balance to allocate points"}), 400
+            current_user.balance -= points
+            current_user.save()
 
         # Allocate points to the target user
-        target_user.update_credits(points, "ALLOCATE")  # Add points to the target user
+        target_user.update_credits(points, "ALLOCATE", current_user_id)  # Add points to the target user
 
         return jsonify({"message": f"Points successfully allocated to user {target_user_id}"}), 200
 
@@ -59,7 +65,7 @@ def redeem_points():
             return jsonify({"error": "Insufficient credits to redeem"}), 400
 
         # Redeem the points (deduct them from user's credits)
-        current_user.update_credits(-points, "REDEEM")  # Deduct points
+        current_user.update_credits(-points, "REDEEM", current_user_id)  # Deduct points
 
         return jsonify({"message": "Points redeemed successfully"}), 200
 

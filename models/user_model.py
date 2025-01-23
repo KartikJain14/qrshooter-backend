@@ -1,10 +1,9 @@
-from google.cloud import firestore
 from models.role_model import Role
 from db import get_collection_reference, get_document_reference
 import datetime
 
 class User:
-    def __init__(self, unique_id: str, first_name: str, last_name: str, email: str = "", phone_number: str = "", is_user: bool = False, is_admin: bool = False, is_sales: bool = False, credits: int = 0, transaction_history: list = None):
+    def __init__(self, unique_id: str, first_name: str, last_name: str, email: str = "", phone_number: str = "", is_user: bool = False, is_admin: bool = False, is_sales: bool = False, credits: int = 0, transaction_history: list = None, balance=0):
         self.unique_id = unique_id
         self.first_name = first_name
         self.last_name = last_name
@@ -13,6 +12,7 @@ class User:
         self.role = Role.USER if is_user else (Role.ADMIN if is_admin else (Role.SALES if is_sales else Role.USER))
         self.credits = credits
         self.transaction_history = transaction_history if transaction_history is not None else []
+        self.balance = balance
 
     def to_dict(self):
         return {
@@ -23,7 +23,8 @@ class User:
             'phone_number': self.phone_number,
             'role': self.role.value,
             'credits': self.credits,
-            'transaction_history': self.transaction_history
+            'transaction_history': self.transaction_history,
+            'balance': self.balance
         }
 
     def save(self):
@@ -40,7 +41,7 @@ class User:
             self.unique_id = new_user_ref.id  # Set the unique_id from the auto-generated Firestore ID
             print(f"Document created with ID: {self.unique_id} at {update_time}")
 
-    def update_credits(self, amount: int, transaction_type: str):
+    def update_credits(self, amount: int, transaction_type: str, action_user: str):
         # Ensure that credits don't go below 0 for redemption
         if self.credits + amount < 0:
             raise ValueError("Insufficient credits to redeem")
@@ -53,7 +54,8 @@ class User:
             "type": transaction_type,
             "points": amount,
             "timestamp": datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S'),
-            "balance": self.credits
+            "balance": self.credits,
+            "action_user": action_user
         }
         self.transaction_history.append(transaction_entry)
 
@@ -80,7 +82,8 @@ class User:
                 is_admin=user_dict['role'] == Role.ADMIN.value,
                 is_sales=user_dict['role'] == Role.SALES.value,
                 credits=user_dict['credits'],  # Initialize credits correctly
-                transaction_history=user_dict.get('transaction_history', [])
+                transaction_history=user_dict.get('transaction_history', []),
+                balance=user_dict.get('balance', 0)
             )
             return user
         return None
