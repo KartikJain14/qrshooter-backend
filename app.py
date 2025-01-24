@@ -10,7 +10,7 @@ import os
 
 ADMIN_PATH=os.getenv("ADMIN_PORTAL") or "/admin"
 
-# Initialize Flask app
+## Initialize Flask app
 
 
 app = Flask(__name__)
