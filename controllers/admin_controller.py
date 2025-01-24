@@ -28,7 +28,7 @@ def get_all_users():
                 user_list.append({
                     "unique_id": user_data.id,
                     "name": user_dict.get("name"),
-                    "points": user_dict.get("points"),
+                    "credits": user_dict.get("credits"),
                 })
         return {"users": user_list}, 200
     except Exception as e:
@@ -37,7 +37,7 @@ def get_all_users():
 def update_user_points(user_id, points):
     try:
         user_ref = get_document_reference('users', user_id)
-        user_ref.update({"points": firestore.Increment(points)})
+        user_ref.update({"credits": firestore.Increment(points)})
         return {"message": "User points updated successfully"}, 200
     except Exception as e:
         return {"error": str(e)}, 400
@@ -47,7 +47,7 @@ def add_user(user_id, user_name, user_points=0):
         user_ref = get_document_reference('users', user_id)
         user_ref.set({
             "name": user_name,
-            "points": user_points
+            "credits": user_points
         })
         return {"message": "User added successfully"}, 201
     except Exception as e:

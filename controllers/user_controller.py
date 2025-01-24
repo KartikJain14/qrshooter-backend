@@ -23,7 +23,6 @@ def add_user():
 
         # Create a new User instance
         user = User(
-            unique_id=None,
             first_name=first_name,
             last_name=last_name,
             email=email,

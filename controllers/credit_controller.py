@@ -94,7 +94,7 @@ def transaction_history():
 def leaderboard():
     try:
         # Fetch all users from the database
-        users = User.get_all_users()
+        users = User.get_all()
 
         # Sort users by credits in descending order
         sorted_users = sorted(users, key=lambda x: x.credits, reverse=True)

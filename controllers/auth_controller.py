@@ -133,7 +133,6 @@ def create_user_by_token():
         user_points = int(data.get('user_points', 0)) 
 
         user = User(
-            unique_id=None,
             first_name=first_name,
             last_name=last_name,
             email=email,
