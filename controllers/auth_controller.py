@@ -182,3 +182,32 @@ def search_user_by_email():
     except Exception as e:
         return jsonify({"error": "Error searching email", "details": str(e)}), 500
 
+def search_user_by_phone():
+    try:
+        # Get the phone from the POST request
+        data = request.get_json()
+        phone = data.get('phone')
+
+        if not phone:
+            return jsonify({"error": "Phone is required"}), 400
+
+        # Query Firestore to check if the email exists
+        db = get_collection_reference('users')  # 'users' is the Firestore collection name
+        users = db.where('phone_number', '==', phone).get()
+
+        # Check if a user with this email exists
+        if len(users) > 0:
+            # Extract user details
+            user_data = users[0].to_dict()  # Get the first matching document's data
+            user_data['id'] = users[0].id  # Add the Firestore document ID if needed
+            return jsonify({
+                "message": "Email already in use",
+                "user_exists": True,
+                "user": user_data
+            }), 200
+
+        # If no user is found
+        return jsonify({"message": "Phone is available", "user_exists": False}), 200
+
+    except Exception as e:
+        return jsonify({"error": "Error searching email", "details": str(e)}), 500
