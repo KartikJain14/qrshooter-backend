@@ -1,5 +1,12 @@
 from flask import Blueprint
-from controllers.auth_controller import send_verification_code, verify_code, create_user_by_token, search_user_by_email, search_user_by_phone
+from controllers.auth_controller import (
+    send_verification_code, 
+    verify_code, 
+    create_user_by_token, 
+    search_user_by_email, 
+    search_user_by_phone
+    )
+    
 
 auth_routes = Blueprint('auth_routes', __name__)
 

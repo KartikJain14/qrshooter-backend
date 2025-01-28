@@ -1,0 +1,31 @@
+[
+    {
+        "name": "Item 1",
+        "price": "101 pts",
+        "image_url": "https://picsum.photos/200"
+    },
+
+    {
+        "name": "Item 2",
+        "price": "102 pts",
+        "image_url": "https://picsum.photos/200"
+    },
+
+    {
+        "name": "Item 3",
+        "price": "103 pts",
+        "image_url": "https://picsum.photos/200"
+    },
+
+    {
+        "name": "Item 4",
+        "price": "104 pts",
+        "image_url": "https://picsum.photos/200"
+    },
+
+    {
+        "name": "Item 5",
+        "price": "105 pts",
+        "image_url": "https://picsum.photos/200"
+    }
+]

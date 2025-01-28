@@ -1,5 +1,10 @@
 from flask import Blueprint
-from controllers.credit_controller import allocate_points, redeem_points, transaction_history, leaderboard
+from controllers.credit_controller import (
+    allocate_points, 
+    redeem_points, 
+    transaction_history, 
+    leaderboard
+    )
 
 credit_routes = Blueprint('credit_routes', __name__)
 

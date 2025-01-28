@@ -1,5 +1,10 @@
-from flask import Blueprint, request
-from controllers.user_controller import add_user, update_profile, delete_profile, get_profile
+from flask import Blueprint
+from controllers.user_controller import (
+    add_user, 
+    update_profile, 
+    delete_profile, 
+    get_profile
+    )
 
 user_routes = Blueprint('user_routes', __name__)
 

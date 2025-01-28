@@ -1,7 +1,12 @@
-from flask import Blueprint, request, render_template, jsonify
+from flask import Blueprint, request, render_template
 from controllers.website_controller import (
-    home, add_user_logic, user_details,
-    update_user_points_logic, update_user_role_logic, delete_user_logic, get_user_transactions_logic
+    home, 
+    add_user_logic, 
+    user_details,
+    update_user_points_logic, 
+    update_user_role_logic, 
+    delete_user_logic, 
+    get_user_transactions_logic
 )
 
 website_routes = Blueprint('website_routes', __name__)
