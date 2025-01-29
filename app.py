@@ -1,14 +1,12 @@
-from flask import Flask, Blueprint
-from config import Config
-from routes import (
-    admin_routes,
-    credit_routes,
-    user_routes,
-    auth_routes,
-    website_routes,
-    data_routes
-    )
 import os
+from flask import Flask
+from config import Config
+from routes.admin_routes import admin_routes
+from routes.credit_routes import credit_routes
+from routes.user_routes import user_routes
+from routes.auth_routes import auth_routes
+from routes.website_routes import website_routes
+from routes.data_routes import data_routes
 
 ADMIN_PATH=os.getenv("ADMIN_PORTAL") or "/admin"
 
