@@ -10,7 +10,7 @@ from controllers.auth_controller import (
 
 auth_routes = Blueprint('auth_routes', __name__)
 
-@auth_routes.route('/phone/send_code', methods=['POST'])
+@auth_routes.route('/phone/auth', methods=['POST'])
 def send_verification_code_route():
     return send_verification_code()
 

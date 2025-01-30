@@ -8,7 +8,7 @@ import base64
 
 def check_phone_exists(phone_number):
     db = get_collection_reference('users')
-    users = db.where('phone_number', '==', phone_number).get()
+    users = db.where(field_path='phone_number', op_string='==', value=phone_number).get()
     return len(list(users)) > 0
 
 def send_verification_code():
@@ -30,12 +30,7 @@ def send_verification_code():
             'verified': False,
             'attempts': 0,
             'created_at': firestore.SERVER_TIMESTAMP,
-
-            ############################################
-            # Set expiry to 30 minutes for development #
-            ############################################
-
-            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=30),
+            'expires_at': datetime.now(timezone.utc) + timedelta(minutes=15),
             'otp': f'{otp}'
         })
 
@@ -102,11 +97,28 @@ def verify_code():
             token: token
         })
 
-        return jsonify({
-            "message": "Verification successful",
-            "token": token
-        }), 200
+        # return jsonify({
+        #     "message": "Verification successful",
+        #     "token": token
+        # }), 200
 
+        db = get_collection_reference('users')
+        users = db.where(field_path='phone_number', op_string='==', value=phone_number).get()
+
+        if len(users) > 0:
+            user_data = users[0].to_dict()
+            user_data['id'] = users[0].id
+            return jsonify({
+                "message": "User found",
+                "user": user_data,
+                "token": token
+            }), 200
+
+        return jsonify({
+            "message": "User not found",
+            "token": token
+        })
+    
     except Exception as e:
         return jsonify({
             "error": "Verification failed",
@@ -192,7 +204,7 @@ def search_user_by_phone():
             user_data = users[0].to_dict()
             user_data['id'] = users[0].id
             return jsonify({
-                "message": "Email already in use",
+                "message": "Phone already in use",
                 "user_exists": True,
                 "user": user_data
             }), 200
