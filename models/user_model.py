@@ -3,7 +3,6 @@ from db import get_collection_reference, get_document_reference
 import datetime
 import random
 import string
-from ..controllers.auth_controller import search_user_by_referal
 
 class User:
     def __init__(self, first_name: str, last_name: str, unique_id: str = None, email: str = "", phone_number: str = "", is_user: bool = False, is_admin: bool = False, is_sales: bool = False, credits: int = 0, transaction_history: list = None, balance=0, referred_by:list[str]=None):
