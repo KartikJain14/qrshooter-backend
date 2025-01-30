@@ -5,7 +5,7 @@ import random
 import string
 
 class User:
-    def __init__(self, first_name: str, last_name: str, unique_id: str = None, email: str = "", phone_number: str = "", is_user: bool = False, is_admin: bool = False, is_sales: bool = False, credits: int = 0, transaction_history: list = None, balance=0, referred_by:list[str]=None):
+    def __init__(self, first_name: str, last_name: str, unique_id: str = None, email: str = "", phone_number: str = "", is_user: bool = False, is_admin: bool = False, is_sales: bool = False, credits: int = 0, transaction_history: list = None, balance=0, referral_code:str=None, referred_by:list[str]=None):
         self.unique_id = unique_id
         self.first_name = first_name
         self.last_name = last_name
@@ -15,7 +15,7 @@ class User:
         self.credits = credits
         self.transaction_history = transaction_history if transaction_history is not None else []
         self.balance = balance
-        self.referral_code = generate_referral_code()
+        self.referral_code = referral_code or generate_referral_code()
         self.referred_by = referred_by
 
     def to_dict(self):
