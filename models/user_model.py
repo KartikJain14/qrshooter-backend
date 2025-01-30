@@ -1,9 +1,12 @@
 from models.role_model import Role
 from db import get_collection_reference, get_document_reference
 import datetime
+import random
+import string
+from ..controllers.auth_controller import search_user_by_referal
 
 class User:
-    def __init__(self, first_name: str, last_name: str, unique_id: str = None, email: str = "", phone_number: str = "", is_user: bool = False, is_admin: bool = False, is_sales: bool = False, credits: int = 0, transaction_history: list = None, balance=0):
+    def __init__(self, first_name: str, last_name: str, unique_id: str = None, email: str = "", phone_number: str = "", is_user: bool = False, is_admin: bool = False, is_sales: bool = False, credits: int = 0, transaction_history: list = None, balance=0, referred_by:list[str]=None):
         self.unique_id = unique_id
         self.first_name = first_name
         self.last_name = last_name
@@ -13,6 +16,8 @@ class User:
         self.credits = credits
         self.transaction_history = transaction_history if transaction_history is not None else []
         self.balance = balance
+        self.referral_code = generate_referral_code()
+        self.referred_by = referred_by
 
     def to_dict(self):
         return {
@@ -24,7 +29,9 @@ class User:
             'role': self.role.value,
             'credits': self.credits,
             'transaction_history': self.transaction_history,
-            'balance': self.balance
+            'balance': self.balance,
+            'referral_code': self.referral_code,
+            'referred_by': self.referred_by
         }
 
     def save(self):
@@ -83,7 +90,9 @@ class User:
                 is_sales=user_dict['role'] == Role.SALES.value,
                 credits=user_dict['credits'],  # Initialize credits correctly
                 transaction_history=user_dict.get('transaction_history', []),
-                balance=user_dict.get('balance', 0)
+                balance=user_dict.get('balance', 0),
+                referral_code=user_dict.get('referral_code', None),
+                referred_by=user_dict.get('referred_by', [])
             )
             return user
         return None
@@ -105,7 +114,18 @@ class User:
                 is_admin=user_dict['role'] == Role.ADMIN.value,
                 is_sales=user_dict['role'] == Role.SALES.value,
                 credits=user_dict['credits'],  # Initialize credits correctly
-                transaction_history=user_dict.get('transaction_history', [])
+                transaction_history=user_dict.get('transaction_history', []),
+                balance=user_dict.get('balance', 0),
+                referral_code=user_dict.get('referral_code', None),
+                referred_by=user_dict.get('referred_by', [])
             )
             users.append(user)
         return users
+
+def generate_referral_code():
+    code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+    db = get_collection_reference('users')
+    users = db.where('referral_code', '==', code).get()
+    if len(users) > 0:
+        return generate_referral_code()
+    return code

@@ -1,10 +1,9 @@
 from flask import request, jsonify
 from google.cloud import firestore
 from models.user_model import User
-from db import get_collection_reference, get_document_reference
+from db import get_collection_reference
 from datetime import datetime, timedelta, timezone
 from utils import send_otp
-from firebase_admin import auth
 import base64
 
 def check_phone_exists(phone_number):
@@ -137,7 +136,7 @@ def create_user_by_token():
             last_name=last_name,
             email=email,
             phone_number=phone_number,
-            credits=user_points  # Pass points directly as integer
+            credits=user_points
         )
 
         user.save()
@@ -147,10 +146,6 @@ def create_user_by_token():
         
     except Exception as e:
         return jsonify({"error": str(e)}), 400
-    
-    
-
-
 
 def search_user_by_email():
     try:
@@ -163,7 +158,7 @@ def search_user_by_email():
 
         # Query Firestore to check if the email exists
         db = get_collection_reference('users')  # 'users' is the Firestore collection name
-        users = db.where('email', '==', email).get()
+        users = db.where(field_path='email', op_string='==', value=email).get()
 
         # Check if a user with this email exists
         if len(users) > 0:
@@ -184,22 +179,18 @@ def search_user_by_email():
 
 def search_user_by_phone():
     try:
-        # Get the phone from the POST request
         data = request.get_json()
         phone = data.get('phone')
 
         if not phone:
             return jsonify({"error": "Phone is required"}), 400
 
-        # Query Firestore to check if the email exists
-        db = get_collection_reference('users')  # 'users' is the Firestore collection name
-        users = db.where('phone_number', '==', phone).get()
+        db = get_collection_reference('users')
+        users = db.where(field_path='phone_number', op_string='==', value=phone).get()
 
-        # Check if a user with this email exists
         if len(users) > 0:
-            # Extract user details
-            user_data = users[0].to_dict()  # Get the first matching document's data
-            user_data['id'] = users[0].id  # Add the Firestore document ID if needed
+            user_data = users[0].to_dict()
+            user_data['id'] = users[0].id
             return jsonify({
                 "message": "Email already in use",
                 "user_exists": True,
@@ -210,4 +201,4 @@ def search_user_by_phone():
         return jsonify({"message": "Phone is available", "user_exists": False}), 200
 
     except Exception as e:
-        return jsonify({"error": "Error searching email", "details": str(e)}), 500
+        return jsonify({"error": "Error searching phone", "details": str(e)}), 500

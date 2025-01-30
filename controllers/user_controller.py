@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from db import get_document_reference
+from db import get_document_reference, get_collection_reference
 from models.user_model import User
 
 def validate_contact_info(email, phone_number):
@@ -15,11 +15,27 @@ def add_user():
         email = data.get('email')
         phone_number = data.get('phone_number')
         user_points = int(data.get('user_points', 0))  # Default to 0 points if not provided
+        referral_code = data.get('referral_code', None)
 
         # Validate that at least one of email or phone_number is provided
         is_valid, error_message = validate_contact_info(email, phone_number)
         if not is_valid:
             return {"error": error_message}, 400
+
+        if referral_code:
+            db = get_collection_reference('users')
+            user = db.where(field_path='referral_code', op_string='==', value=referral_code).get()
+            if len(user) <= 0:
+                return {"error": "Referral code invalid"}, 400
+            user_data = user[0].to_dict()
+            referred_by = user_data['referred_by']
+            if len(referred_by) >= 5:
+                return {"error": "Referral code has been used 5 times"}, 400
+            
+            user_points += 20
+            if email == "":
+                referred_by.append(user_data['phone_number'])
+            referred_by.append(user_data['email'])
 
         # Create a new User instance
         user = User(
