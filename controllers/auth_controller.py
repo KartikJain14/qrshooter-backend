@@ -6,19 +6,11 @@ from datetime import datetime, timedelta, timezone
 from utils import send_otp
 import base64
 
-def check_phone_exists(phone_number):
-    db = get_collection_reference('users')
-    users = db.where(field_path='phone_number', op_string='==', value=phone_number).get()
-    return len(list(users)) > 0
-
 def send_verification_code():
     try:
         phone_number = request.json.get('phone_number')
         if not phone_number:
             return jsonify({"error": "Phone number is required"}), 400
-
-        if check_phone_exists(phone_number):
-            return jsonify({"error": "Phone number already registered"}), 400
 
         verification_id, otp = send_otp(phone_number)
         
@@ -110,14 +102,13 @@ def verify_code():
             user_data['id'] = users[0].id
             return jsonify({
                 "message": "User found",
-                "user": user_data,
-                "token": token
+                "user": user_data
             }), 200
 
         return jsonify({
             "message": "User not found",
             "token": token
-        })
+        }), 201
     
     except Exception as e:
         return jsonify({
