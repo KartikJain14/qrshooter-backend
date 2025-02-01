@@ -14,7 +14,7 @@ def add_user():
         last_name = data.get('last_name')
         email = data.get('email')
         phone_number = data.get('phone_number')
-        user_points = int(data.get('user_points', 0))  # Default to 0 points if not provided
+        user_points = 0
         referral_code = data.get('referral_code', None)
 
         # Validate that at least one of email or phone_number is provided
@@ -24,32 +24,30 @@ def add_user():
 
         if referral_code:
             db = get_collection_reference('users')
-            user = db.where(field_path='referral_code', op_string='==', value=referral_code).get()
-            if len(user) <= 0:
+            referrer = db.where(field_path='referral_code', op_string='==', value=referral_code).get()
+            if len(referrer) <= 0:
                 return {"error": "Referral code invalid"}, 400
-            user_data = user[0].to_dict()
-            referred_by = user_data['referred_by']
-            if len(referred_by) >= 5:
+            referrer_data = referrer[0].to_dict()
+            if len(referrer_data['referred_by']) >= 5:
                 return {"error": "Referral code has been used 5 times"}, 400
             
             user_points += 20
             if email == "":
-                referred_by.append(user_data['phone_number'])
-            referred_by.append(user_data['email'])
-
+                referrer_data['referred_by'].append(referrer_data['phone_number'])
+            referrer_data['referred_by'].append(referrer_data['email'])
+            referrer.save(referrer_data) 
+        
         # Create a new User instance
-        user = User(
+        newUser = User(
             first_name=first_name,
             last_name=last_name,
             email=email,
             phone_number=phone_number,
-            credits=user_points  # Pass points directly as integer
+            credits=user_points
         )
-        
-        # Save user to database
-        user.save()
+        newUser.save()
 
-        return {"message": "User added successfully", "user": user.to_dict()}, 201
+        return {"message": "User added successfully", "user": newUser.to_dict()}, 201
     except Exception as e:
         return {"error": str(e)}, 400
 
