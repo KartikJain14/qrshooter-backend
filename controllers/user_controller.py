@@ -34,20 +34,31 @@ def add_user():
                 return {"error": "Referral code has been used 5 times"}, 400
             
             user_points += 20
-            if email:
-                referrer_data['referred_by'].append(email)
-            else:
-                referrer_data['referred_by'].append(phone_number)
+            referrer_contact = referrer_data.get('email') or referrer_data.get('phone_number')
+            new_user_contact = email or phone_number
+            
+            # Update referrer's referred_by list
+            referrer_data['referred_by'].append(new_user_contact)
             referrer[0].reference.update({'referred_by': referrer_data['referred_by']})
-        
-        # Create a new User instance
-        newUser = User(
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            phone_number=phone_number,
-            credits=user_points
-        )
+            
+            # Create new user with referrer in their referred_by list
+            newUser = User(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                phone_number=phone_number,
+                credits=user_points,
+                referred_by=[referrer_contact]  # Initialize with referrer's contact
+            )
+        else:
+            newUser = User(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                phone_number=phone_number,
+                credits=user_points,
+                referred_by=[]
+            )
         newUser.save()
 
         return {"message": "User added successfully", "user": newUser.to_dict()}, 201

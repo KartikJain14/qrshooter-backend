@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from controllers.credit_controller import (
     allocate_points, 
     redeem_points, 
@@ -25,4 +25,8 @@ def transaction_history_route():
 
 @credit_routes.route('/leaderboard', methods=['GET'])
 def get_leaderboard():
-    return leaderboard()
+    try:
+        return leaderboard()
+    except Exception as e:
+        print(f"Route Error: {str(e)}")  # Debug log
+        return jsonify({"error": "Server timeout"}), 504

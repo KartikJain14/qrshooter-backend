@@ -93,14 +93,31 @@ def transaction_history():
 
 def leaderboard():
     try:
-        # Fetch all users from the database
+        # Add limit parameter with default 50
+        limit = request.args.get('limit', default=50, type=int)
+        
+        # Fetch users from database
         users = User.get_all()
-
-        # Sort users by credits in descending order
+        
+        # Sort users by credits
         sorted_users = sorted(users, key=lambda x: x.credits, reverse=True)
-
-        # Return the leaderboard data
-        return jsonify({"leaderboard": [user.to_dict() for user in sorted_users]}), 200
+        
+        # Limit the number of users
+        top_users = sorted_users[:limit]
+        
+        # Return only essential fields
+        leaderboard_data = [{
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'credits': user.credits,
+            'referral_code': user.referral_code
+        } for user in top_users]
+        
+        return jsonify({
+            "leaderboard": leaderboard_data,
+            "total_users": len(sorted_users)
+        }), 200
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 400
+        print(f"Leaderboard Error: {str(e)}")  # Debug log
+        return jsonify({"error": "Failed to fetch leaderboard"}), 500
