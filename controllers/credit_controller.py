@@ -1,7 +1,8 @@
 from flask import request, jsonify
 from models.role_model import Role
 from models.user_model import User
-
+from db import get_collection_reference, get_document_reference
+import time
 def allocate_points():
     try:
         data = request.json
@@ -93,31 +94,74 @@ def transaction_history():
 
 def leaderboard():
     try:
-        # Add limit parameter with default 50
-        limit = request.args.get('limit', default=50, type=int)
+        limit = min(request.args.get('limit', default=10, type=int), 50)
         
-        # Fetch users from database
-        users = User.get_all()
+        users_ref = get_collection_reference('users')
+        leaderboard_ref = get_document_reference('cache', 'leaderboard')
         
-        # Sort users by credits
-        sorted_users = sorted(users, key=lambda x: x.credits, reverse=True)
+        # Try to get cached leaderboard first
+        cached_data = leaderboard_ref.get()
         
-        # Limit the number of users
-        top_users = sorted_users[:limit]
+        if cached_data.exists:
+            cache_dict = cached_data.to_dict()
+            leaderboard_data = cache_dict.get('rankings', [])[:limit]
+            last_updated = int(cache_dict.get('last_updated', 0))  # Ensure int
+            
+            # If data is fresh enough (less than 5 minutes old)
+            if int(time.time()) - last_updated < 300:
+                return jsonify({
+                    "data": leaderboard_data,
+                    "count": len(leaderboard_data),
+                    "cached": True
+                }), 200
         
-        # Return only essential fields
-        leaderboard_data = [{
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'credits': user.credits,
-            'referral_code': user.referral_code
-        } for user in top_users]
+        # If no cache or cache expired, get fresh data
+        query = users_ref.order_by('credits', direction='DESCENDING')\
+                         .order_by('__name__', direction='ASCENDING')\
+                         .limit(limit)
+        users_snapshot = query.get(timeout=5)
+        
+        leaderboard_data = []
+        for doc in users_snapshot:
+            doc_data = doc.to_dict()
+            if doc_data:
+                entry = {
+                    'id': doc.id,
+                    'name': f"{doc_data.get('first_name', '')} {doc_data.get('last_name', '')}".strip(),
+                    'credits': doc_data.get('credits', 0)
+                }
+                leaderboard_data.append(entry)
+        
+        # Cache only if we got valid data
+        if leaderboard_data:
+            leaderboard_ref.set({
+                'rankings': leaderboard_data,
+                'last_updated': int(time.time())  # Store as int
+            })
         
         return jsonify({
-            "leaderboard": leaderboard_data,
-            "total_users": len(sorted_users)
+            "data": leaderboard_data,
+            "count": len(leaderboard_data),
+            "cached": False
         }), 200
 
     except Exception as e:
-        print(f"Leaderboard Error: {str(e)}")  # Debug log
-        return jsonify({"error": "Failed to fetch leaderboard"}), 500
+        print(f"Leaderboard Error: {e}")
+
+        # If Firestore query fails, try using old cache as fallback
+        try:
+            cached_data = leaderboard_ref.get()
+            if cached_data.exists:
+                return jsonify({
+                    "data": cached_data.to_dict().get('rankings', [])[:limit],
+                    "count": len(cached_data.to_dict().get('rankings', [])),
+                    "cached": True,
+                    "fallback": True
+                }), 200
+        except:
+            pass
+            
+        return jsonify({
+            "error": "Leaderboard temporarily unavailable",
+            "retry": True
+        }), 503
