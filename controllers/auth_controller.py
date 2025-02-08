@@ -167,7 +167,7 @@ def search_user_by_email():
         if len(users) > 0:
             # Extract user details
             user_data = users[0].to_dict()  # Get the first matching document's data
-            user_data['id'] = users[0].id  # Add the Firestore document ID if needed
+            user_data['unique_id'] = users[0].id  # Add the Firestore document ID if needed
             return jsonify({
                 "message": "Email already in use",
                 "user_exists": True,
@@ -193,7 +193,7 @@ def search_user_by_phone():
 
         if len(users) > 0:
             user_data = users[0].to_dict()
-            user_data['id'] = users[0].id
+            user_data['unique_id'] = users[0].id
             return jsonify({
                 "message": "Phone already in use",
                 "user_exists": True,
