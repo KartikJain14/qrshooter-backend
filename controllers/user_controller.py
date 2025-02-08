@@ -27,28 +27,18 @@ def add_user():
             referrer = db.where(field_path='referral_code', op_string='==', value=referral_code).get()
             if len(referrer) <= 0:
                 return {"error": "Referral code invalid"}, 400
-            referrer_data = referrer[0].to_dict()
-            if 'referred_by' not in referrer_data or referrer_data['referred_by'] is None:
-                referrer_data['referred_by'] = []
-            if len(referrer_data['referred_by']) >= 5:
-                return {"error": "Referral code has been used 5 times"}, 400
             
+            referrer_id = referrer[0].id  # Get referrer's ID
             user_points += 20
-            referrer_contact = referrer_data.get('email') or referrer_data.get('phone_number')
-            new_user_contact = email or phone_number
             
-            # Update referrer's referred_by list
-            referrer_data['referred_by'].append(new_user_contact)
-            referrer[0].reference.update({'referred_by': referrer_data['referred_by']})
-            
-            # Create new user with referrer in their referred_by list
+            # Create new user with referrer's ID
             newUser = User(
                 first_name=first_name,
                 last_name=last_name,
                 email=email,
                 phone_number=phone_number,
                 credits=user_points,
-                referred_by=[referrer_contact]  # Initialize with referrer's contact
+                referred_by=[referrer_id]  # Store only referrer's ID
             )
         else:
             newUser = User(
