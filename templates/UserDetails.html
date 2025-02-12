@@ -137,12 +137,12 @@
                     <tr>
                         <th>Date</th>
                         <th>Type</th>
-                        <th>Amount</th>
-                        <th>Description</th>
+                        <th>Points</th>
+                        <th>Balance</th>
+                        <th>Action By</th>
                     </tr>
                 </thead>
-                <tbody id="transactionsBody">
-                </tbody>
+                <tbody id="transactionsBody"></tbody>
             </table>
         </div>
 
@@ -181,6 +181,51 @@
                 });
             }
         });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const userId = "{{ user.unique_id }}";
+        const transactionsBody = document.getElementById('transactionsBody');
+        const loading = document.getElementById('loading');
+
+        console.log('Fetching transactions for user:', userId);  // Debug log
+
+        // Show loading
+        loading.style.display = 'block';
+
+        // Fetch transactions
+        fetch(`${window.location.pathname}/transactions`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                loading.style.display = 'none';
+                
+                if (!data.transactions || data.transactions.length === 0) {
+                    transactionsBody.innerHTML = '<tr><td colspan="5">No transactions found</td></tr>';
+                    return;
+                }
+
+                data.transactions.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${transaction.timestamp || 'N/A'}</td>
+                        <td>${transaction.type || 'N/A'}</td>
+                        <td>${transaction.points || 0}</td>
+                        <td>${transaction.balance || 0}</td>
+                        <td>${transaction.action_user || 'N/A'}</td>
+                    `;
+                    transactionsBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                loading.textContent = 'Error loading transactions';
+            });
+    });
     </script>
 </body>
 </html>

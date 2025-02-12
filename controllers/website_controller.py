@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from db import get_collection_reference
 from controllers.admin_controller import add_user
 from models.user_model import User
+import os
 
 load_dotenv()
 
@@ -59,15 +60,16 @@ def user_details(user_id):
 
 def update_user_points_logic(user_id, points):
     try:
-        db.document(user_id).update({'credits': points})
-        return redirect(f"/user/{user_id}")
+        user_ref = db.document(user_id)
+        user_ref.update({'credits': points})
+        return redirect(f"{os.getenv('ADMIN_PORTAL')}/user/{user_id}")
     except Exception as e:
         return str(e), 500
 
 def update_user_role_logic(user_id, new_role):
     try:
         db.document(user_id).update({'role': new_role})
-        return redirect(f"/user/{user_id}")
+        return redirect(f"{os.getenv('ADMIN_PORTAL')}/user/{user_id}")
     except Exception as e:
         return str(e), 500
 
@@ -80,17 +82,22 @@ def delete_user_logic(user_id):
 
 def get_user_transactions_logic(user_id):
     try:
-        transactions_ref = get_collection_reference('transactions')
-        transactions = transactions_ref.where('user_id', '==', user_id).stream()
+        # Get user document
+        user_ref = db.document(user_id)
+        user_doc = user_ref.get()
         
-        transaction_list = []
-        for transaction in transactions:
-            trans_data = transaction.to_dict()
-            trans_data['id'] = transaction.id
-            trans_data['timestamp'] = trans_data.get('timestamp', '').strftime('%Y-%m-%d %H:%M:%S')
-            transaction_list.append(trans_data)
+        if not user_doc.exists:
+            return jsonify({'transactions': []}), 200
             
-        transaction_list.sort(key=lambda x: x['timestamp'], reverse=True)
-        return jsonify(transaction_list), 200
+        user_data = user_doc.to_dict()
+        transactions = user_data.get('transaction_history', [])
+        
+        # Sort transactions by timestamp in descending order
+        transactions.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+        
+        print(f"Found {len(transactions)} transactions for user {user_id}")
+        return jsonify({'transactions': transactions}), 200
+        
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(f"Error fetching transactions: {str(e)}")
+        return jsonify({'error': str(e)}), 500
