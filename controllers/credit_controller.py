@@ -95,33 +95,40 @@ def transaction_history():
 def leaderboard():
     try:
         limit = min(request.args.get('limit', default=10, type=int), 50)
+        current_time = int(time.time())
         
         users_ref = get_collection_reference('users')
         leaderboard_ref = get_document_reference('cache', 'leaderboard')
         
-        # Try to get cached leaderboard first
+        # Debug cache check
         cached_data = leaderboard_ref.get()
         
         if cached_data.exists:
             cache_dict = cached_data.to_dict()
-            leaderboard_data = cache_dict.get('rankings', [])[:limit]
-            last_updated = int(cache_dict.get('last_updated', 0))  # Ensure int
+            last_updated = int(cache_dict.get('last_updated', 0))
+            cache_age = current_time - last_updated
+            print(f"Cache age: {cache_age} seconds")  # Debug log
             
-            # If data is fresh enough (less than 5 minutes old)
-            if int(time.time()) - last_updated < 300:
+            # Return cached data if less than 5 minutes old
+            if cache_age < 45:  # 45 seconds
+                leaderboard_data = cache_dict.get('rankings', [])[:limit]
+                print(f"Using cached data from {last_updated}")  # Debug log
                 return jsonify({
                     "data": leaderboard_data,
                     "count": len(leaderboard_data),
-                    "cached": True
+                    "cached": True,
+                    "cache_age": cache_age
                 }), 200
         
-        # If no cache or cache expired, get fresh data
+        # Cache expired or doesn't exist, fetch fresh data
+        print("Fetching fresh leaderboard data")  # Debug log
         query = users_ref.order_by('credits', direction='DESCENDING')\
-                         .order_by('__name__', direction='ASCENDING')\
-                         .limit(limit)
-        users_snapshot = query.get(timeout=5)
+                        .order_by('__name__', direction='ASCENDING')\
+                        .limit(limit)
         
+        users_snapshot = query.get(timeout=1)
         leaderboard_data = []
+        
         for doc in users_snapshot:
             doc_data = doc.to_dict()
             if doc_data:
@@ -132,35 +139,23 @@ def leaderboard():
                 }
                 leaderboard_data.append(entry)
         
-        # Cache only if we got valid data
+        # Update cache with new data
         if leaderboard_data:
+            print(f"Updating cache at {current_time}")  # Debug log
             leaderboard_ref.set({
                 'rankings': leaderboard_data,
-                'last_updated': int(time.time())  # Store as int
+                'last_updated': current_time
             })
         
         return jsonify({
             "data": leaderboard_data,
             "count": len(leaderboard_data),
-            "cached": False
+            "cached": False,
+            "updated_at": current_time
         }), 200
 
     except Exception as e:
-        print(f"Leaderboard Error: {e}")
-
-        # If Firestore query fails, try using old cache as fallback
-        try:
-            cached_data = leaderboard_ref.get()
-            if cached_data.exists:
-                return jsonify({
-                    "data": cached_data.to_dict().get('rankings', [])[:limit],
-                    "count": len(cached_data.to_dict().get('rankings', [])),
-                    "cached": True,
-                    "fallback": True
-                }), 200
-        except:
-            pass
-            
+        print(f"Leaderboard Error: {str(e)}")
         return jsonify({
             "error": "Leaderboard temporarily unavailable",
             "retry": True
