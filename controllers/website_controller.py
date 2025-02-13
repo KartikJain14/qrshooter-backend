@@ -66,6 +66,7 @@ def update_user_points_logic(user_id, points):
     except Exception as e:
         return str(e), 500
 
+
 def update_user_role_logic(user_id, new_role):
     try:
         db.document(user_id).update({'role': new_role})
@@ -101,3 +102,11 @@ def get_user_transactions_logic(user_id):
     except Exception as e:
         print(f"Error fetching transactions: {str(e)}")
         return jsonify({'error': str(e)}), 500
+
+def update_user_balance_logic(user_id, balance):
+    try:
+        user_ref = db.document(user_id)
+        user_ref.update({'balance': balance})
+        return redirect(f"{os.getenv('ADMIN_PORTAL')}/user/{user_id}")
+    except Exception as e:
+        return str(e), 500

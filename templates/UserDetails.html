@@ -94,6 +94,7 @@
                     <p><strong>ID:</strong> {{ user.unique_id }}</p>
                     <p><strong>Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
                     <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Vendor Balance:</strong> {{ user.balance }}</p>
                 </div>
                 <div>
                     <p><strong>Phone:</strong> {{ user.phone_number }}</p>
@@ -113,6 +114,19 @@
                 <button type="submit" class="btn btn-success">Update Points</button>
             </form>
         </div>
+        
+        {% if user.role == 'SALES' %}
+        <div class="card">
+            <h3>Modify Balance (Only for Vendor)</h3>
+            <form action="../user/balance/update" method="POST">
+                <input type="hidden" name="user_id" value="{{ user.unique_id }}">
+                <div class="form-group">
+                    <input type="number" name="balance" placeholder="Enter balance">
+                </div>
+                <button type="submit" class="btn btn-success">Update Balance</button>
+            </form>
+        </div>
+        {% endif %}
 
         <div class="card">
             <h3>Change Role</h3>

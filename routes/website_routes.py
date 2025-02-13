@@ -6,7 +6,8 @@ from controllers.website_controller import (
     update_user_points_logic, 
     update_user_role_logic, 
     delete_user_logic, 
-    get_user_transactions_logic
+    get_user_transactions_logic,
+    update_user_balance_logic
 )
 
 website_routes = Blueprint('website_routes', __name__)
@@ -32,6 +33,12 @@ def route_update_user_points():
     user_id = request.form.get('user_id')
     points = int(request.form.get('points', 0))
     return update_user_points_logic(user_id, points)
+
+@website_routes.route("/user/balance/update", methods=["POST"])
+def route_update_user_balance():
+    user_id = request.form.get('user_id')
+    balance = int(request.form.get('balance', 0))
+    return update_user_balance_logic(user_id, balance)
 
 @website_routes.route("/user/role/update", methods=["POST"])
 def route_update_user_role():
