@@ -1,0 +1,56 @@
+{
+    "Day 1": [
+      {
+        "name": "Opening Ceremony!",
+        "description": "Kickoff event with keynote speakers.",
+        "time": "10:00 AM - 11:00 AM",
+        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+      },
+      {
+        "name": "Workshop 1",
+        "description": "Introduction to AI and ML.",
+        "time": "11:30 AM - 1:00 PM",
+        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+      },
+      {
+        "name": "Workshop 3",
+        "description": "Introduction to AI and ML.",
+        "time": "12:30 AM - 2:00 PM",
+        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+      },
+      {
+        "name": "Workshop 4",
+        "description": "Introduction to AI and ML.",
+        "time": "2:00 PM - 3:00 PM",
+        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+      }
+    ],
+    "Day 2": [
+      {
+        "name": "Networking Session",
+        "description": "Meet and greet with industry professionals.",
+        "time": "10:00 AM - 11:30 AM",
+        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+      },
+      {
+        "name": "Panel Discussion",
+        "description": "Discussion on emerging tech trends.",
+        "time": "1:00 PM - 2:30 PM",
+        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+      }
+    ],
+    "Day 3": [
+      {
+        "name": "Hackathon Finale",
+        "description": "Presentation and judging of projects.",
+        "time": "10:00 AM - 1:00 PM",
+        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+      },
+      {
+        "name": "Closing Ceremony",
+        "description": "Award distribution and feedback session.",
+        "time": "2:00 PM - 3:00 PM",
+        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+      }
+    ]
+  }

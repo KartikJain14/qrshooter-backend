@@ -1,17 +1,17 @@
 import json
 
-def get_events_for_day(day):
+def get_schedule():
     try:
-        with open(f'data/schedule/day_{day}.json', 'r') as f:
+        with open(f'data/schedule.json', 'r', encoding='utf-8') as f:
             events = json.load(f)
         return events
     except FileNotFoundError:
-        return None
+        return {'error': 'File not found'}
 
 def get_items():
     try:
-        with open('data/reedem/items.json', 'r') as f:
+        with open('data/items.json', 'r', encoding='utf-8') as f:
             items = json.load(f)
         return items
     except FileNotFoundError:
-        return None
+        return {'error': 'File not found'}
