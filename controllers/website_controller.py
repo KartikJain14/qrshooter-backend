@@ -10,7 +10,11 @@ load_dotenv()
 db = get_collection_reference('users')
 
 def home():
+    sort_by = "default"
     user_list = db
+    if request.method == "POST":
+        sort_by = request.form.get("sortbtn")
+    print(sort_by)
     users = []
     for doc in user_list.stream():
         user_data = doc.to_dict()
@@ -19,7 +23,11 @@ def home():
         user_data['credits'] = user_data.get('credits', 0)
         user_data['role'] = user_data.get('role', 'User')
         users.append(user_data)
-    return render_template("HomePage.html", users=users)
+    if sort_by == "default":
+        return render_template("HomePage.html", users=users)
+    else:
+        users = [user for user in users if user["role"] == sort_by]
+        return render_template("HomePage.html", users=users)
 
 def add_user_logic(data):
     try:

@@ -1,4 +1,5 @@
 from flask import Blueprint, request
+from operator import itemgetter
 from controllers.admin_controller import (
     auth_middleware,
     get_all_users, 
@@ -18,7 +19,13 @@ def check_auth():
 
 @admin_routes.route('/users', methods=['GET'])
 def get_all_users_route():
-    return get_all_users()
+    sort_order = request.args.get("sort", "ascending")
+    users = get_all_users()
+    if sort_order == "descending":
+        users.sort(key=itemgetter("credits"), reverse=True)
+    else:
+        users.sort(key=itemgetter("credits"))
+    return users
 
 @admin_routes.route('/points/update', methods=['PUT'])
 def update_user_points_route():

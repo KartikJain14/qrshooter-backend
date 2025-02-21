@@ -14,7 +14,7 @@ website_routes = Blueprint('website_routes', __name__)
 
 # do NOT change the routes without manually changing stuff in templates
 
-@website_routes.route("/", methods=["GET"])
+@website_routes.route("/", methods=["GET", "POST"])
 def route_home():
     return home()
 

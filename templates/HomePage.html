@@ -75,6 +75,15 @@
 <body>
     <div class="container">
         <h1>Admin Database</h1>
+        <form method="POST", action="/admin">
+            <select id="sortbtn" name="sortbtn" >
+                <option>Sort</option>
+                <option value="default">All</option>
+                <option value="SALES">Sales</option>
+                <option value="ADMIN">Admin</option>
+                <option value="USER">User</option>
+            </select>
+        </form>
         <table>
             <tr>
                 <th>User Id</th>
@@ -84,7 +93,13 @@
             </tr>
             {% for user in users %}
             <tr>
-                <td><a href="./user/{{ user.id }}">{{ user.id }}</a></td>
+                <td><a href="./user/{{ user.id }}"
+                        style="
+                        {% if user.role == 'ADMIN' %}color: red;
+                        {% elif user.role == 'SALES' %}color: #FF00FF;
+                        {% endif %}">{{ user.id }}
+                    </a>
+                </td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.credits }}</td>
                 <td>{{ user.role }}</td>
@@ -95,5 +110,12 @@
             <a href="./user/add" class="btn">Add User</a>
         </div>
     </div>
+
+    <script>
+        document.getElementById("sortbtn").addEventListener("change", function() {
+            this.form.submit();
+        });
+    </script>
+
 </body>
 </html>

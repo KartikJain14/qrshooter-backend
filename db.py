@@ -1,10 +1,10 @@
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import firebase_admin
 from firebase_admin import credentials, firestore
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(dotenv_path=".env", override=True)
 
 # Initialize Firebase Admin SDK if not already initialized
 if not firebase_admin._apps:
