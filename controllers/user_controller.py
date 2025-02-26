@@ -49,7 +49,7 @@ def add_user():
                 credits=user_points,
                 referred_by=[]
             )
-        newUser.save()
+            newUser.save()
 
         return {"message": "User added successfully", "user": newUser.to_dict()}, 201
     except Exception as e:

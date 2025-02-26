@@ -5,9 +5,12 @@ from db import get_collection_reference
 from datetime import datetime, timedelta, timezone
 from utils import send_otp
 import base64
+from dotenv import load_dotenv
 import os
+load_dotenv()
 
-TEST_PHONE = '7777777777'
+TEST_PHONE = os.getenv('TEST_PHONE_NUMBER') or '7777777777'
+TEST_OTP = os.getenv('TEST_OTP') or '123456'
 
 def send_verification_code():
     try:
@@ -18,7 +21,7 @@ def send_verification_code():
         # TEST PHONE HANDLING START
         if phone_number == TEST_PHONE:
             verification_id = 'test_verification_id'
-            test_otp = '123456'
+            test_otp = TEST_OTP
             
             db = get_collection_reference('phone_auth')
             doc_ref = db.document(verification_id)
@@ -69,8 +72,8 @@ def verify_code():
 
         # TEST VERIFICATION START
         if phone_number == TEST_PHONE:
-            if verification_code == '123456':
-                token = base64.b64encode(f"{TEST_PHONE}::test_verification_id".encode('utf-8')).decode('utf-8')
+            if verification_code == TEST_OTP:
+                token = base64.b64encode(f"{phone_number}::test_verification_id".encode('utf-8')).decode('utf-8')
                 return jsonify({
                     "message": "User not found",
                     "token": token
@@ -157,7 +160,7 @@ def create_user_by_token():
         token = data.get('token')
         first_name = data.get('first_name')
         last_name = data.get('last_name')
-        email = data.get('email')
+        email = data.get('email') or None
         user_points = 0
         referral_code = data.get('referral_code', None)
 
@@ -201,19 +204,19 @@ def create_user_by_token():
                 credits=user_points,
                 referred_by=[referrer_id]  # Store only referrer's ID
             )
+            return {"message": "User added successfully with referral", "user": newUser.to_dict()}, 201
+        
         else:
             newUser = User(
                 first_name=first_name,
-                last_name=last_name,
-                email=email,
-                phone_number=phone_number,
-                credits=user_points,
-                referred_by=[]
+                last_name=last_name or None,
+                email=email or None,
+                phone_number=phone_number or None,
+                credits=0
             )
             newUser.save()
 
-        return {"message": "User added successfully", "user": newUser.to_dict()}, 201
-
+            return {"message": "User added successfully without referral", "user": newUser.to_dict()}, 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
