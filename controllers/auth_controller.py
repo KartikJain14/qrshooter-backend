@@ -155,14 +155,14 @@ def create_user_by_token():
     try:
         data = request.json
         token = data.get('token')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
+        user_points = 0
+        referral_code = data.get('referral_code', None)
 
         # TEST USER CREATION START
         if token and base64.b64decode(token).decode('utf-8').startswith(TEST_PHONE):
-            first_name = data.get('first_name')
-            last_name = data.get('last_name')
-            email = data.get('email')
-            user_points = int(data.get('user_points', 0))
-
             user = User(
                 first_name=first_name,
                 last_name=last_name,
@@ -182,25 +182,38 @@ def create_user_by_token():
 
         if not user:
             return jsonify({"error": "Token invalid"}), 404
-        
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        email = data.get('email')
-        user_points = int(data.get('user_points', 0)) 
 
-        user = User(
-            first_name=first_name,
-            last_name=last_name,
-            email=email,
-            phone_number=phone_number,
-            credits=user_points
-        )
+        if referral_code:
+            db = get_collection_reference('users')
+            referrer = db.where(field_path='referral_code', op_string='==', value=referral_code).get()
+            if len(referrer) <= 0:
+                return {"error": "Referral code invalid"}, 400
+            
+            referrer_id = referrer[0].id  # Get referrer's ID
+            user_points += 20
+            
+            # Create new user with referrer's ID
+            newUser = User(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                phone_number=phone_number,
+                credits=user_points,
+                referred_by=[referrer_id]  # Store only referrer's ID
+            )
+        else:
+            newUser = User(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                phone_number=phone_number,
+                credits=user_points,
+                referred_by=[]
+            )
+            newUser.save()
 
-        user.save()
+        return {"message": "User added successfully", "user": newUser.to_dict()}, 201
 
-        return {"message": "User added successfully", "user": user.to_dict()}, 201
-
-        
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
