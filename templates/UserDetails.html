@@ -109,8 +109,17 @@
             <form action="../user/points/update" method="POST">
                 <input type="hidden" name="user_id" value="{{ user.unique_id }}">
                 <div class="form-group">
-                    <input type="number" name="points" placeholder="Enter points">
+                    <input type="number" id="pointsInput" name="points" placeholder="Enter points">
                 </div>
+                <div>
+                    <button type="button" class="btn btn-success" onclick="adjustPoints(100)">+100</button>
+                    <button type="button" class="btn btn-success" onclick="adjustPoints(200)">+200</button>
+                    <button type="button" class="btn btn-success" onclick="adjustPoints(500)">+500</button>
+                    <button type="button" class="btn btn-danger" onclick="adjustPoints(-100)">-100</button>
+                    <button type="button" class="btn btn-danger" onclick="adjustPoints(-200)">-200</button>
+                    <button type="button" class="btn btn-danger" onclick="adjustPoints(-500)">-500</button>
+                </div>
+                <br>
                 <button type="submit" class="btn btn-success">Update Points</button>
             </form>
         </div>
@@ -121,12 +130,34 @@
             <form action="../user/balance/update" method="POST">
                 <input type="hidden" name="user_id" value="{{ user.unique_id }}">
                 <div class="form-group">
-                    <input type="number" name="balance" placeholder="Enter balance">
+                    <input type="number" id="balanceInput" name="balance" placeholder="Enter balance" value="">
                 </div>
+                <div>
+                    <button type="button" class="btn btn-success" onclick="adjustBalance(100)">+100</button>
+                    <button type="button" class="btn btn-success" onclick="adjustBalance(200)">+200</button>
+                    <button type="button" class="btn btn-success" onclick="adjustBalance(500)">+500</button>
+                    <button type="button" class="btn btn-danger" onclick="adjustBalance(-100)">-100</button>
+                    <button type="button" class="btn btn-danger" onclick="adjustBalance(-200)">-200</button>
+                    <button type="button" class="btn btn-danger" onclick="adjustBalance(-500)">-500</button>
+                </div>
+                <br>
                 <button type="submit" class="btn btn-success">Update Balance</button>
             </form>
         </div>
         {% endif %}
+
+        <script>
+            function adjustPoints(value) {
+                let pointsInput = document.getElementById('pointsInput');
+                let currentValue = parseInt(pointsInput.value) || 0;
+                pointsInput.value = currentValue + value;}
+
+            function adjustBalance(value) {
+                let balanceInput = document.getElementById('balanceInput');
+                let currentValue = parseInt(balanceInput.value) || 0;
+                balanceInput.value = currentValue + value;
+            }
+        </script>
 
         <div class="card">
             <h3>Change Role</h3>
