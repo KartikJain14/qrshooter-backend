@@ -40,6 +40,8 @@ def add_user():
                 credits=user_points,
                 referred_by=[referrer_id]  # Store only referrer's ID
             )
+            
+            newUser.save()
         else:
             newUser = User(
                 first_name=first_name,
