@@ -4,3 +4,5 @@ venv/*
 *firebase*.json
 service-account.json
 *.pyc
+env/
+.vercel

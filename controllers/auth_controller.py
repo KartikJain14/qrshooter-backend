@@ -204,6 +204,7 @@ def create_user_by_token():
                 credits=user_points,
                 referred_by=[referrer_id]  # Store only referrer's ID
             )
+            newUser.save()
             return {"message": "User added successfully with referral", "user": newUser.to_dict()}, 201
         
         else:
