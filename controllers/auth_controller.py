@@ -205,7 +205,11 @@ def create_user_by_token():
                 referred_by=[referrer_id]  # Store only referrer's ID
             )
             newUser.save()
-            referrer.update_credits(20, "Referral bonus", first_name+" "+last_name)
+            
+            # Update referrer's credits
+            referrer_user = User.get_by_id(referrer_id)
+            referrer_user.update_credits(20, "Referral bonus", first_name + " " + last_name)
+            
             return {"message": "User added successfully with referral", "user": newUser.to_dict()}, 201
         
         else:
