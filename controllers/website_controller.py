@@ -122,3 +122,62 @@ def update_user_balance_logic(user_id, balance):
         return redirect(f"{os.getenv('ADMIN_PORTAL')}/user/{user_id}")
     except Exception as e:
         return str(e), 500
+
+def search_users():
+    query = request.args.get('query', '')
+    print(f"Search query received: '{query}'")
+
+    if not query or query.strip() == '':
+        print("Empty query, returning all users")
+        return home()
+
+    query = query.lower().strip()
+    users = []
+
+    try:
+        print(f"Processing search for: '{query}'")
+        # Get all users first
+        all_docs = list(db.stream())
+        print(f"Total users in database: {len(all_docs)}")
+
+        for doc in all_docs:
+            user_data = doc.to_dict()
+            user_id = doc.id
+
+            # Get the searchable fields
+            first_name = user_data.get('first_name', '').lower() if user_data.get('first_name') else ''
+            last_name = user_data.get('last_name', '').lower() if user_data.get('last_name') else ''
+            full_name = f"{first_name} {last_name}".strip()
+            email = user_data.get('email', '').lower() if user_data.get('email') else ''
+            phone = user_data.get('phone_number', '').lower() if user_data.get('phone_number') else ''
+
+            print(f"Checking user - ID: {user_id}, Name: '{full_name}', Email: '{email}', Phone: '{phone}'")
+
+            # Use exact substring matching
+            found_match = False
+            if query in full_name:
+                print(f"Match found in name: '{full_name}'")
+                found_match = True
+            elif query in email:
+                print(f"Match found in email: '{email}'")
+                found_match = True  
+            elif query in phone:
+                print(f"Match found in phone: '{phone}'")
+                found_match = True
+            elif query in user_id.lower():
+                print(f"Match found in ID: '{user_id}'")
+                found_match = True
+
+            if found_match:
+                # Format for display
+                user_data['id'] = user_id
+                user_data['name'] = f"{user_data.get('first_name', '')} {user_data.get('last_name', '')}".strip()
+                user_data['credits'] = user_data.get('credits', 0)
+                user_data['role'] = user_data.get('role', 'User')
+                users.append(user_data)
+
+        print(f"Search results: {len(users)} users found")
+        return render_template("HomePage.html", users=users, query=query)
+    except Exception as e:
+        print(f"Search error: {str(e)}")
+        return render_template("HomePage.html", users=[], query=query, error=str(e))

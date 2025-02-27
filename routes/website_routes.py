@@ -7,7 +7,8 @@ from controllers.website_controller import (
     update_user_role_logic, 
     delete_user_logic, 
     get_user_transactions_logic,
-    update_user_balance_logic
+    update_user_balance_logic,
+    search_users
 )
 
 website_routes = Blueprint('website_routes', __name__)
@@ -16,6 +17,9 @@ website_routes = Blueprint('website_routes', __name__)
 
 @website_routes.route("/", methods=["GET", "POST"])
 def route_home():
+    query = request.args.get('query')
+    if query:
+        return search_users()
     return home()
 
 @website_routes.route("/user/add", methods=["GET", "POST"])
