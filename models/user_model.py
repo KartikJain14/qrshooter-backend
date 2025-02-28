@@ -17,6 +17,7 @@ class User:
         self.balance = balance
         self.referral_code = referral_code or generate_referral_code()
         self.referred_by = referred_by
+        self.referrals = []  
 
     def to_dict(self):
         return {

@@ -187,12 +187,29 @@ def create_user_by_token():
             return jsonify({"error": "Token invalid"}), 404
 
         if referral_code:
-            db = get_collection_reference('users')
-            referrer = db.where(field_path='referral_code', op_string='==', value=referral_code).get()
-            if len(referrer) <= 0:
-                return {"error": "Referral code invalid"}, 400
+            # Get user by referral code
+            users_db = get_collection_reference('users')
+            referrer_query = users_db.where('referral_code', '==', referral_code).get()
             
-            referrer_id = referrer[0].id  # Get referrer's ID
+            if len(referrer_query) == 0:
+                return jsonify({"error": "Invalid referral code"}), 400
+                
+            referrer_id = referrer_query[0].id  # Get referrer's ID
+            
+            # Get the referrer's complete data
+            referrer_user = User.get_by_id(referrer_id)
+            if not referrer_user:
+                return jsonify({"error": "Referrer not found"}), 400
+                
+            referrer_data = referrer_user.to_dict()
+            
+            # Check if referrer has a referrals field, if not initialize it
+            current_referrals = referrer_data.get('referrals', [])
+            
+            # Check if referrer has reached the limit
+            if len(current_referrals) >= 5:
+                return jsonify({"error": "Referral limit reached for this code"}), 400
+                
             user_points += 20
             
             # Create new user with referrer's ID
@@ -206,9 +223,17 @@ def create_user_by_token():
             )
             newUser.save()
             
-            # Update referrer's credits
-            referrer_user = User.get_by_id(referrer_id)
+            # Update referrer's credits and referrals
             referrer_user.update_credits(20, "Referral bonus", first_name + " " + last_name)
+            
+            # Update referral count - add this user to referrals list
+            if not hasattr(referrer_user, 'referrals') or referrer_user.referrals is None:
+                referrer_user.referrals = []
+            
+            referrer_user.referrals.append(newUser.unique_id)
+            
+            # Save the referrer with updated referrals
+            users_db.document(referrer_id).update({'referrals': referrer_user.referrals})
             
             return {"message": "User added successfully with referral", "user": newUser.to_dict()}, 201
         
