@@ -15,3 +15,11 @@ def get_items():
         return items
     except FileNotFoundError:
         return {'error': 'File not found'}
+    
+def get_events():
+    try:
+        with open('data/events.json', 'r', encoding='utf-8') as f:
+            events = json.load(f)
+        return events
+    except FileNotFoundError:
+        return {'error': 'File not found'}

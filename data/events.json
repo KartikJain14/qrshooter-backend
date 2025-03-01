@@ -1,0 +1,32 @@
+[
+    {
+      "id": "1",
+      "name": "Basketball Game (NBA)",
+      "points": 20,
+      "description": "Play basketball to earn points"
+    },
+    {
+      "id": "2",
+      "name": "Football Match",
+      "points": 30,
+      "description": "Participate in football matches"
+    },
+    {
+      "id": "3",
+      "name": "Quiz Competition",
+      "points": 25,
+      "description": "Answer questions correctly to win points"
+    },
+    {
+      "id": "4",
+      "name": "Chess Tournament",
+      "points": 40,
+      "description": "Show your strategy skills"
+    },
+    {
+      "id": "5",
+      "name": "Coding Challenge",
+      "points": 99,
+      "description": "Solve programming problems"
+    }
+]
