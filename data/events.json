@@ -1,9 +1,9 @@
 [
     {
       "id": "1",
-      "name": "Name Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget justo nec magna elementum tincidunt. Donec vehicula, nulla id sagittis convallis, nisi risus feugiat sapien, at sodales dui nunc vel nunc. Fusce tempor purus vitae augue fringilla, non eleifend mi ultrices. Phasellus interdum, nisl eget lacinia venenatis, tortor magna luctus sapien, vel tempus lorem velit vel nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla facilisi. Cras convallis mauris vel magna vulputate, id mattis lectus bibendum. Vivamus vel volutpat urna, eget pharetra nulla.",
+      "name": "10",
       "points": 10,
-      "description": "Description Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget justo nec magna elementum tincidunt. Donec vehicula, nulla id sagittis convallis, nisi risus feugiat sapien, at sodales dui nunc vel nunc. Fusce tempor purus vitae augue fringilla, non eleifend mi ultrices. Phasellus interdum, nisl eget lacinia venenatis, tortor magna luctus sapien, vel tempus lorem velit vel nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla facilisi. Cras convallis mauris vel magna vulputate, id mattis lectus bibendum. Vivamus vel volutpat urna, eget pharetra nulla."
+      "description": "Allocate 10 points"
     },
     {
       "id": "2",
@@ -34,29 +34,5 @@
       "name": "60",
       "points": 60,
       "description": "Allocate 60 points"
-    },
-    {
-      "id": "7",
-      "name": "70",
-      "points": 70,
-      "description": "Allocate 70 points"
-    },
-    {
-      "id": "8",
-      "name": "80",
-      "points": 80,
-      "description": "Allocate 80 points"
-    },
-    {
-      "id": "9",
-      "name": "90",
-      "points": 90,
-      "description": "Allocate 90 points"
-    },
-    {
-      "id": "10",
-      "name": "100",
-      "points": 100,
-      "description": "Allocate 100 points"
     }
 ]
