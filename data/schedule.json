@@ -1,56 +1,116 @@
 {
     "Day 1": [
       {
-        "name": "Opening Ceremony!",
+        "name": "Inaugration Ceremony",
         "description": "Kickoff event with keynote speakers.",
         "time": "10:00 AM - 11:00 AM",
-        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
       },
       {
-        "name": "Workshop 1",
-        "description": "Introduction to AI and ML.",
-        "time": "11:30 AM - 1:00 PM",
-        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+        "name": "Decibel",
+        "description": "Musical Harmony Event.",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
       },
       {
-        "name": "Workshop 3",
-        "description": "Introduction to AI and ML.",
-        "time": "12:30 AM - 2:00 PM",
-        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+        "name": "The Talk",
+        "description": "Dinesh Sir and Saumya Singh.",
+        "time": "4:00 PM - 6:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
       },
       {
-        "name": "Workshop 4",
-        "description": "Introduction to AI and ML.",
-        "time": "2:00 PM - 3:00 PM",
-        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+        "name": "Projects Showcase",
+        "description": "Showcase the projects",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Events Display",
+        "description": "Display the events",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Informals",
+        "description": "Play and win prizes",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
       }
     ],
     "Day 2": [
       {
-        "name": "Networking Session",
-        "description": "Meet and greet with industry professionals.",
-        "time": "10:00 AM - 11:30 AM",
-        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+        "name": "Fifa Tournament",
+        "description": "Fifa tournament for all the gamers.",
+        "time": "10:00 AM - 6:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
       },
       {
-        "name": "Panel Discussion",
-        "description": "Discussion on emerging tech trends.",
-        "time": "1:00 PM - 2:30 PM",
-        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+        "name": "CC 4.0 Registration",
+        "description": "Registration for CC 4.0",
+        "time": "4:00 PM - 6:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Cyber Cypher 4.0",
+        "description": "Cyber Cypher 4.0 commencement.",
+        "time": "6:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Projects Showcase",
+        "description": "Showcase the projects",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Events Display",
+        "description": "Display the events",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Informals",
+        "description": "Play and win prizes",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
       }
     ],
     "Day 3": [
       {
-        "name": "Hackathon Finale",
-        "description": "Presentation and judging of projects.",
-        "time": "10:00 AM - 1:00 PM",
-        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+        "name": "Hackathon Ends",
+        "description": "End for CC 4.0",
+        "time": "12 Noon",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
       },
       {
-        "name": "Closing Ceremony",
-        "description": "Award distribution and feedback session.",
-        "time": "2:00 PM - 3:00 PM",
-        "image": "https://images.unsplash.com/photo-1622872613729-b2adf6bddfcd"
+        "name": "Hackathon Finale",
+        "description": "Presentation and judging of projects.",
+        "time": "2:00 PM - 5:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Projects Showcase",
+        "description": "Showcase the projects",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Events Display",
+        "description": "Display the events",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Informals",
+        "description": "Play and win prizes",
+        "time": "11:00 AM - 3:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
+      },
+      {
+        "name": "Fifa",
+        "description": "Fifa khelo",
+        "time": "10:00 AM - 6:00 PM",
+        "image": "https://ctrl-shift.taqneeqfest.com/logo.png"
       }
     ]
   }
