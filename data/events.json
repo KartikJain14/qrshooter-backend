@@ -1,9 +1,9 @@
 [
     {
       "id": "1",
-      "name": "10",
+      "name": "Name Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget justo nec magna elementum tincidunt. Donec vehicula, nulla id sagittis convallis, nisi risus feugiat sapien, at sodales dui nunc vel nunc. Fusce tempor purus vitae augue fringilla, non eleifend mi ultrices. Phasellus interdum, nisl eget lacinia venenatis, tortor magna luctus sapien, vel tempus lorem velit vel nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla facilisi. Cras convallis mauris vel magna vulputate, id mattis lectus bibendum. Vivamus vel volutpat urna, eget pharetra nulla.",
       "points": 10,
-      "description": "Allocate 10 points"
+      "description": "Description Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget justo nec magna elementum tincidunt. Donec vehicula, nulla id sagittis convallis, nisi risus feugiat sapien, at sodales dui nunc vel nunc. Fusce tempor purus vitae augue fringilla, non eleifend mi ultrices. Phasellus interdum, nisl eget lacinia venenatis, tortor magna luctus sapien, vel tempus lorem velit vel nisi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla facilisi. Cras convallis mauris vel magna vulputate, id mattis lectus bibendum. Vivamus vel volutpat urna, eget pharetra nulla."
     },
     {
       "id": "2",
