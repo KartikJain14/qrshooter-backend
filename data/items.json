@@ -1,46 +1,37 @@
 [
     {
         "id": "1",
-        "name": "French Fries",
-        "price": "100 pts",
-        "points": 100,
-        "description": "Eat French Fries to earn points",
-        "image_url": "https://static.toiimg.com/thumb/54659021.cms?imgsize=275086&width=800&height=800"
+        "name": "Gamer's Street",
+        "price": "1000 pts",
+        "points": 1000,
+        "description": "Enjoy a delicious gaming-themed meal and earn points!",
+        "image_url":"https://ctrl-shift.taqneeqfest.com/gift.png"
     },
 
     {
         "id": "2",
-        "name": "Burger",
-        "price": "50 pts",
-        "points": 100,
-        "description": "Eat French Fries to earn points",
-        "image_url": "https://u2burger.com/wp-content/uploads/2024/03/Untitled-design-12.png"
+        "name": "Mixed Culture Pizzeria",
+        "price": "750 pts",
+        "points": 750,
+        "description": "Savor a fusion of flavors with our special pizzas.",
+        "image_url": "https://ctrl-shift.taqneeqfest.com/gift.png"
     },
 
     {
         "id": "3",
-        "name": "French Fries",
-        "price": "100 pts",
-        "points": 100,
-        "description": "Eat French Fries to earn points",
-        "image_url": "https://static.toiimg.com/thumb/54659021.cms?imgsize=275086&width=800&height=800"
+        "name": "Interview Buddy",
+        "price": "750 pts",
+        "points": 750,
+        "description": "Get expert interview guidance and ace your next job!",
+        "image_url": "https://ctrl-shift.taqneeqfest.com/interview-buddy.png"
     },
 
     {
         "id": "4",
-        "name": "Burger",
-        "price": "50 pts",
-        "points": 100,
-        "description": "Eat French Fries to earn points",
-        "image_url": "https://u2burger.com/wp-content/uploads/2024/03/Untitled-design-12.png"
-    },
-    
-    {
-        "id": "5",
-        "name": "French Fries",
-        "price": "100 pts",
-        "points": 100,
-        "description": "Eat French Fries to earn points",
-        "image_url": "https://static.toiimg.com/thumb/54659021.cms?imgsize=275086&width=800&height=800"
+        "name": "Belgian Waffle",
+        "price": "800 pts",
+        "points": 800,
+        "description": "Indulge in a crispy, golden Belgian waffle with toppings of your choice.",
+        "image_url": "https://ctrl-shift.taqneeqfest.com/belgian-waffle.jpeg"
     }
 ]

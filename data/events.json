@@ -1,32 +1,62 @@
 [
     {
       "id": "1",
-      "name": "Basketball Game (NBA)",
-      "points": 20,
-      "description": "Play basketball to earn points"
+      "name": "10",
+      "points": 10,
+      "description": "Allocate 10 points"
     },
     {
       "id": "2",
-      "name": "Football Match",
-      "points": 30,
-      "description": "Participate in football matches"
+      "name": "20",
+      "points": 20,
+      "description": "Allocate 20 points"
     },
     {
       "id": "3",
-      "name": "Quiz Competition",
-      "points": 25,
-      "description": "Answer questions correctly to win points"
+      "name": "30",
+      "points": 30,
+      "description": "Allocate 30 points"
     },
     {
       "id": "4",
-      "name": "Chess Tournament",
+      "name": "40",
       "points": 40,
-      "description": "Show your strategy skills"
+      "description": "Allocate 40 points"
     },
     {
       "id": "5",
-      "name": "Coding Challenge",
-      "points": 99,
-      "description": "Solve programming problems"
+      "name": "50",
+      "points": 50,
+      "description": "Allocate 50 points"
+    },
+    {
+      "id": "6",
+      "name": "60",
+      "points": 60,
+      "description": "Allocate 60 points"
+    },
+    {
+      "id": "7",
+      "name": "70",
+      "points": 70,
+      "description": "Allocate 70 points"
+    },
+    {
+      "id": "8",
+      "name": "80",
+      "points": 80,
+      "description": "Allocate 80 points"
+    },
+    {
+      "id": "9",
+      "name": "90",
+      "points": 90,
+      "description": "Allocate 90 points"
+    },
+    {
+      "id": "10",
+      "name": "100",
+      "points": 100,
+      "description": "Allocate 100 points"
     }
 ]

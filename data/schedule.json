@@ -2,7 +2,7 @@
   "Day 1": [
     {
       "name": "Inaugration Ceremony",
-      "description": "Kickoff event with keynote speakers.",
+      "description": "Kickoff event.",
       "time": "10:00 AM - 11:00 AM",
       "image": "https://ctrl-shift.taqneeqfest.com/ribbon.png"
     },
@@ -14,19 +14,19 @@
     },
     {
       "name": "The Talk",
-      "description": "Dinesh Sir and Saumya Singh | Big Auditorium",
+      "description": "Dinesh Sir and Saumya Singh | Big Seminar Hall",
       "time": "4:00 PM - 6:00 PM",
       "image": "https://ctrl-shift.taqneeqfest.com/thetalk.jpg"
     },
     {
       "name": "Projects Showcase",
-      "description": "Showcase the projects | Big Auditorium",
+      "description": "Showcase the projects | Big Seminar Hall",
       "time": "11:00 AM - 3:00 PM",
       "image": "https://ctrl-shift.taqneeqfest.com/projects.jpg"
     },
     {
       "name": "Events Display",
-      "description": "Display the events | Canopy",
+      "description": "Display of events | Canopy & Big Seminar Hall ",
       "time": "11:00 AM - 3:00 PM",
       "image": "https://ctrl-shift.taqneeqfest.com/robots.jpg"
     },
@@ -57,14 +57,14 @@
       "image": "https://ctrl-shift.taqneeqfest.com/hack1.jpg"
     },
     {
-      "name": "Projects Showcase | Big Auditorium",
+      "name": "Projects Showcase | Big Seminar Hall",
       "description": "Showcase the projects",
       "time": "11:00 AM - 3:00 PM",
       "image": "https://ctrl-shift.taqneeqfest.com/projects.jpg"
     },
     {
-      "name": "Events Display | Big Auditorium",
-      "description": "Display the events",
+      "name": "Events Display | Big Seminar Hall",
+      "description": "Display of events | Canopy & Big Seminar Hall ",
       "time": "11:00 AM - 3:00 PM",
       "image": "https://ctrl-shift.taqneeqfest.com/robots.jpg"
     },
@@ -90,13 +90,13 @@
     },
     {
       "name": "Projects Showcase",
-      "description": "Showcase the projects | Big Auditorium",
+      "description": "Showcase the projects | Big Seminar Hall",
       "time": "11:00 AM - 3:00 PM",
       "image": "https://ctrl-shift.taqneeqfest.com/projects.jpg"
     },
     {
       "name": "Events Display",
-      "description": "Display the events | Big Auditorium",
+      "description": "Display of events | Canopy & Big Seminar Hall ",
       "time": "11:00 AM - 3:00 PM",
       "image": "https://ctrl-shift.taqneeqfest.com/robots.jpg"
     },
@@ -108,7 +108,7 @@
     },
     {
       "name": "Fifa",
-      "description": "Fifa khelo",
+      "description": "Fifa tournament for all the gamers.",
       "time": "10:00 AM - 6:00 PM",
       "image": "https://ctrl-shift.taqneeqfest.com/fifa.jpg"
     }
