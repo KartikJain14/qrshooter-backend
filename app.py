@@ -1,5 +1,6 @@
 import os
 from flask import Flask, redirect, request
+from flask_cors import CORS  # Import Flask-CORS
 from config import Config
 from routes.admin_routes import admin_routes
 from routes.credit_routes import credit_routes
@@ -12,10 +13,17 @@ ADMIN_PATH=os.getenv("ADMIN_PORTAL") or "/admin"
 
 ## Initialize Flask app
 
-
 app = Flask(__name__)
 app.config.from_object(Config)
 app.static_folder = 'static'
+
+# Enable CORS
+CORS(app)  # This enables CORS for all routes
+
+# For more specific CORS configuration, you can use:
+# CORS(app, resources={r"/api/*": {"origins": "*"}})
+# Or for specific origins:
+# CORS(app, resources={r"/api/*": {"origins": "https://allowed-domain.com"}})
 
 # Register blueprints
 # Register website_routes without prefix since it handles main routes
