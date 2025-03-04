@@ -2,90 +2,63 @@
     {
         "id": "1",
         "name": "Gamer's Street",
-        "price": "600 pts",
-        "points": 600,
+        "price": "100 pts",
+        "points": 100,
         "description": "Enjoy a delicious gaming-themed meal and earn points!",
-        "image_url":"https://ctrl-shift.taqneeqfest.com/gamers.jpg"
+        "image_url":"https://ctrl-shift.taqneeqfest.com/gift.png"
     },
 
     {
         "id": "2",
         "name": "Mixed Culture Pizzeria",
-        "price": "650 pts",
-        "points": 650,
+        "price": "150 pts",
+        "points": 150,
         "description": "Savor a fusion of flavors with our special pizzas.",
-        "image_url": "https://ctrl-shift.taqneeqfest.com/pizaa.jpg"
+        "image_url": "https://ctrl-shift.taqneeqfest.com/gift.png"
     },
 
     {
         "id": "3",
         "name": "Interview Buddy",
-        "price": "500 pts",
-        "points": 500,
+        "price": "50 pts",
+        "points": 50,
         "description": "Get expert interview guidance and ace your next job!",
         "image_url": "https://ctrl-shift.taqneeqfest.com/interview-buddy.png"
     },
 
     {
         "id": "4",
-        "name": "Belgian Waffle",
-        "price": "750 pts",
-        "points": 750,
-        "description": "Indulge in a crispy, golden Belgian waffle with toppings of your choice.",
-        "image_url": "https://ctrl-shift.taqneeqfest.com/belgian-waffle.jpeg"
+        "name": "OneUp",
+        "price": "350 pts",
+        "points": 350,
+        "description": "Refresh, Recharge, Resurge with OneUp",
+        "image_url": "https://ctrl-shift.taqneeqfest.com/oneup.jpeg"
     },
 
     {
         "id": "5",
-        "name": "Eazy Diner",
-        "price": "1000 pts",
-        "points": 1000,
-        "description": "Indulge in fine dining at the best restaurants in town.",
-        "image_url": "https://ctrl-shift.taqneeqfest.com/ezdiner.png"
+        "name": "Brew Baaba",
+        "price": "150 pts",
+        "points": 150,
+        "description": "Get exciting discounts at Brew Baba.",
+        "image_url": "https://ctrl-shift.taqneeqfest.com/brewbaba.jpeg"
     },
 
     {
         "id": "6",
-        "name": "File and Style",
-        "price": "700 pts",
-        "points": 700,
-        "description": "Get trendy nails and flaunt your style!",
-        "image_url": "https://ctrl-shift.taqneeqfest.com/file.jpg"
+        "name": "Gamer's Street",
+        "price": "100 pts",
+        "points": 100,
+        "description": "Enjoy a delicious gaming-themed meal and earn points!",
+        "image_url":"https://ctrl-shift.taqneeqfest.com/gift.png"
     },
 
     {
         "id": "7",
-        "name": "OneUp",
-        "price": "750 pts",
-        "points": 750,
-        "description": "Refresh, Recharge, Resurge with OneUp",
-        "image_url": "https://ctrl-shift.taqneeqfest.com/oneup.jpg"
-    },
-
-    {
-        "id": "8",
-        "name": "Starbucks",
-        "price": "800 pts",
-        "points": 800,
-        "description": "Get 25% off on your favorite 3 Starbucks beverages.",
-        "image_url": "https://ctrl-shift.taqneeqfest.com/starbucks.png"
-    },
-
-    {
-        "id": "9",
-        "name": "Brew Baba",
-        "price": "700 pts",
-        "points": 700,
-        "description": "Get exciting discounts at Brew Baba.",
-        "image_url": "https://ctrl-shift.taqneeqfest.com/brewbaba.jpg"
-    },
-
-    {
-        "id": "10",
-        "name": "Colorbar",
-        "price": "900 pts",
-        "points": 900,
-        "description": "Beauty that is kind, makeup that is magical.",
-        "image_url": "https://ctrl-shift.taqneeqfest.com/colorbar.jpg"
+        "name": "DrinkIt",
+        "price": "200 pts",
+        "points": 200,
+        "description": "Get a free drink",
+        "image_url":"https://ctrl-shift.taqneeqfest.com/gift.png"
     }
 ]
