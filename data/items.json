@@ -55,10 +55,10 @@
 
     {
         "id": "7",
-        "name": "DrinkIt",
-        "price": "200 pts",
-        "points": 200,
-        "description": "Get a free drink",
-        "image_url":"https://ctrl-shift.taqneeqfest.com/gift.png"
+        "name": "Belgian Waffle",
+        "price": "300 pts",
+        "points": 300,
+        "description": "Get 20% off on your next order at Belgian Waffle.",
+        "image_url":"https://ctrl-shift.taqneeqfest.com/belgianwaffle.jpeg"
     }
 ]
